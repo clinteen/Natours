@@ -1,0 +1,162 @@
+const multer = require('multer');
+const sharp = require('sharp');
+const asyncCatch = require('./../utils/AsyncCatchError');
+const User = require('./../models/userModel');
+const AppError = require('./../utils/AppError');
+const factoryController = require('./factoryController');
+
+// const multerStorage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'public/img/users');
+//     },
+//     filename: (req, file, cb) => {
+//         const file_extension = file.mimetype.split('/')[1];
+//         cb(null, `user-${req.user.id}-${Date.now()}.${file_extension}`);
+//     }
+// });
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+    if (!file.mimetype.startsWith('image')) {
+        cb(
+            new AppError(
+                'The file is not an image! Please upload an image',
+                400
+            ),
+            false
+        );
+    } else {
+        cb(null, true);
+    }
+};
+
+// const upload = multer({ dest: 'public/img/users' });
+const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter
+});
+
+exports.updateUserPhoto = upload.single('photo');
+
+exports.resizeUserPhoto = asyncCatch(async (req, res, next) => {
+    if (!req.file) return next();
+
+    req.file.filename = `user-${req.user.id}-${Date.now()}}.jpeg`;
+
+    await sharp(req.file.buffer)
+        .resize(500, 500)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/users/${req.file.filename}`);
+
+    next();
+});
+
+const filteredObj = (obj, ...allowedFields) => {
+    const newObj = {};
+    Object.keys(obj).forEach((el) => {
+        if (allowedFields.includes(el)) {
+            newObj[el] = obj[el];
+        }
+    });
+    return newObj;
+};
+
+exports.updateMe = asyncCatch(async (req, res, next) => {
+    // console.log(req.file);
+    // console.log(req.body);
+    //1.) Make sure the user does not try to update password
+    if (req.body.password || req.body.confirmPassword) {
+        return next(
+            new AppError(
+                'This route is not for updating password! Please go to /reset-password',
+                400
+            )
+        );
+    }
+
+    //2.) Update the user document
+    console.log(req.user.id);
+    const filteredBody = filteredObj(req.body, 'name', 'email');
+    if (req.file) filteredBody.photo = req.file.filename;
+
+    const updatedUser = await User.findByIdAndUpdate(
+        req.user.id,
+        filteredBody,
+        {
+            returnDocument: 'after',
+            runValidators: true,
+            lean: true
+        }
+    );
+
+    //3.) Send the updated document to the User
+    res.status(200).json({
+        status: 'success',
+        user: updatedUser
+    });
+});
+
+exports.getMe = (req, res, next) => {
+    req.params.id = req.user.id;
+
+    next();
+};
+
+exports.deleteMe = asyncCatch(async (req, res, next) => {
+    const user = await User.findByIdAndUpdate(
+        { _id: req.user.id },
+        { active: false }
+    );
+
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});
+
+exports.getAllUsers = factoryController.getAllDocuments(User);
+// exports.getAllUsers = asyncCatch(async (req, res, next) => {
+//     const users = await User.find();
+
+//     res.status(200).json({
+//         status: "success",
+//         requestTime: req.requestTime,
+//         length: users.length,
+//         data: {
+//             users: users,
+//         },
+//     });
+// });
+
+exports.getSingleUser = factoryController.getDocument(User);
+// exports.getSingleUser = (req, res) => {
+//     res.status(504).json({
+//         status: "success",
+//         message: "This page is not ready yet",
+//     });
+// };
+
+exports.updateSingleUser = factoryController.updateDocument(User);
+// exports.updateSingleUser = (req, res) => {
+//     res.status(504).json({
+//         status: "success",
+//         message: "This page is not ready yet",
+//     });
+// };
+
+exports.createUser = (req, res) => {
+    res.status(504).json({
+        status: 'success',
+        message: 'This page does not exist! Please use /sign-up page'
+    });
+};
+// exports.createUser = factoryController.createDocument(User);
+
+exports.deleteSingleUser = factoryController.deleteDocument(User);
+// exports.deleteSingleUser = (req, res) => {
+//     res.status(504).json({
+//         status: "success",
+//         message: "This page is not ready yet",
+//     });
+// };

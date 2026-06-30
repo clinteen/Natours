@@ -1,0 +1,35 @@
+doctype doctype html
+html(lang="en")
+    head
+        block head
+            meta(charset="UTF-8")
+            meta(name="viewport", content="width=device-width, initial-scale=1.0")
+            link(rel='stylesheet' href='/css/style.css')
+            link(rel='shortcut icon' type='/image/png' href='/img/favicon.png')
+            title Natours | #{title}
+    
+    body 
+        //- This is for practice
+        //- header(class='header') 
+        //- - const x = ` I am a ${tour}`
+        //- h1= tour
+        //- h1= user.toUpperCase() + x
+        //- //- h1 The Park Camper
+        // HEADER
+        include _header
+
+        // CONTENT
+        //- section.overview    
+        //-     h1= tour 
+        block content 
+            h1 This is a placeholder for the base page
+        
+        // FOOTER
+        include _footer
+
+        script(src='/js/map.js')
+        //- script(src='https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js')
+        script( src='https://js.stripe.com/dahlia/stripe.js')
+        script(src='/axios.min.js')
+        script(type='module' src='/js/login.js')
+        script(type='module' src='/js/stripeSession.js')

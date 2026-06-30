@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title {
+            margin: 5rem auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">
+            🌽NODE FARM🥦
+        </h1>
+
+        <div class="mini-container">
+            <a href="#">
+                <button>👈back</button>
+            </a>
+
+            <div class="product-name-container">
+                <h1 class="product-name">{PRODUCTNAME}</h1>
+            </div>
+
+            <div class="details-container">
+                <div class="from-details">
+                    <span>🌍</span> From {FROM}
+                </div>
+                <div class="vitamin-details">
+                    <span>🫀</span>{NUTRIENTS}
+                </div>
+                <div class="quantity-details">
+                    <span>📦</span>{QUANTITY}
+                </div>
+                <div class="price-details">
+                    <span>🏷️</span>{PRICE}
+                </div>
+                
+            </div>
+
+            <a href="#" class="add-to-cart-container">
+                <div>
+                    <span>🛒</span>ADD TO SHOPPING CART({PRICE})
+                </div>
+            </a>
+
+            <p class="description-details">
+                {DESCRIPTION}
+            </p>
+        </div>
+    </div>
+</body>
+</html>
