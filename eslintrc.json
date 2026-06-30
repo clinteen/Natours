@@ -1,0 +1,26 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": ["eslint:recommended"],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-undef": "error",
+        "no-unused-vars": "warn"
+    },
+    "overrides": [
+        {
+            "files": ["login.js", "public/**/*.js"],
+            "env": { "browser": true, "node": false }
+        },
+        {
+            "files": ["controllers/**/*.js", "app.js", "server.js"],
+            "env": { "node": true, "browser": false }
+        }
+    ]
+}

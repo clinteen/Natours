@@ -7,6 +7,7 @@ const reviewRouter = require('./../routes/reviewRoutes');
 
 const router = express.Router();
 
+// This middleware function only runs if the specified parameter is in the route
 // router.param("id", tourController.checkID);
 
 router.use('/:tourId/reviews', reviewRouter);
