@@ -1,4 +1,6 @@
 node_modules/
+Async_Js/
+.vscode/
 *.env
 .prettierrc
 eslint.config.mjs
