@@ -1,2 +1,9 @@
 node_modules/
 *.env
+.prettierrc
+eslint.config.mjs
+eslintrc.json
+new-text.txt
+practice.js
+tours.json
+script.js
