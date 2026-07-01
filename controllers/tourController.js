@@ -37,6 +37,7 @@ exports.resizeUploadImage = upload.fields([
 // upload.fields([{}]) (req.files) Multiple files with multiple filed name
 
 exports.updateTourImage = asyncCatch(async (req, res, next) => {
+    // Check if images exist
     if (!req.files.imageCover || !req.files.images) return next();
 
     // 1.) Image Cover

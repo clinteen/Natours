@@ -64,7 +64,7 @@ const sendProdError = (err, req, res, next) => {
                 message: err.message
             });
         }
-        // 2.) Programming Error: Dont Leak error Details
+        // 2.) Programming Error: Don't Leak error Details
         // Log the error
         console.error('ERROR: ', err);
 

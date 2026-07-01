@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const { xss } = require('express-xss-sanitizer');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const AppError = require('./../utils/AppError');
 const errorController = require('./../controllers/errorController');
@@ -123,6 +124,8 @@ app.use(hpp());
 //             "price",
 //         ],
 //     }));
+
+app.use(compression());
 
 // Reading static files
 
