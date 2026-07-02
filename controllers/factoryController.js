@@ -98,6 +98,9 @@ exports.getAllDocuments = (Model) => {
         if (req.params.tourId) {
             filteredId = { tour: req.params.tourId };
         }
+        if (req.params.userId) {
+            filteredId = { user: req.params.userId };
+        }
         const features = new ApiFeatures(Model.find(filteredId), req.query)
             .filter()
             .sort()
