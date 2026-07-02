@@ -2,8 +2,9 @@ const express = require('express');
 
 const authController = require('./../controllers/authController');
 const bookingsController = require('./../controllers/bookingsController');
+const reviewController = require('../controllers/reviewController');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.use(authController.protect_routes);
 
@@ -14,7 +15,7 @@ router.use(authController.restrictTo('admin', 'lead-guide'));
 router
     .route('/')
     .get(bookingsController.getAllBookings)
-    .post(bookingsController.createBooking);
+    .post(reviewController.getUserTourId, bookingsController.createBooking);
 
 router
     .route('/:id')

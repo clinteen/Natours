@@ -77,7 +77,7 @@ exports.getAllBookings = factoryController.getAllDocuments(Booking);
 
 exports.getSingleBooking = factoryController.getDocument(Booking, {
     path: 'user',
-    select: 'name'
+    select: 'name email'
 });
 
 exports.updateBooking = factoryController.updateDocument(Booking);

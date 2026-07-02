@@ -112,7 +112,7 @@ exports.getAllDocuments = (Model) => {
             requestTime: req.requestTime,
             length: doc.length,
             data: {
-                tours: doc
+                documents: doc
             }
         });
     });

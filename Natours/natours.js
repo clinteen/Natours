@@ -22,6 +22,9 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', `${__dirname}/../views`);
 
+// This is for heroku, because heroku redirects every request to a proxy, This settings allows vscode to trust heroku
+// app.enable('trust proxy');
+
 //1. MIDDLEWARE
 
 // app.use(

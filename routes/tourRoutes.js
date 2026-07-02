@@ -4,6 +4,7 @@ const tourController = require('./../controllers/tourController');
 const authController = require('./../controllers/authController');
 // const reviewController = require("./../controllers/reviewController");
 const reviewRouter = require('./../routes/reviewRoutes');
+const bookingRouter = require('./bookingsRoutes');
 
 const router = express.Router();
 
@@ -11,6 +12,7 @@ const router = express.Router();
 // router.param("id", tourController.checkID);
 
 router.use('/:tourId/reviews', reviewRouter);
+router.use('/:tourId/bookings', bookingRouter);
 
 router
     .route('/top-5-tours')
