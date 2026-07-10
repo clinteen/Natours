@@ -33,7 +33,50 @@ mixin reviewCard(review)
             //- svg.reviews__star.reviews__star--active 
             //-     use(xlink:href='/img/icons.svg#icon-star')
 
+mixin hasUserBookedTour(secondary_text, cta_text, select_Tag)
+    .cta__img.cta__img--logo 
+        img(src='/img/logo/white.png', alt='Natours Logo')
+        img.cta__img.cta__img--1(src='/img/tour-5-2.jpg', alt='')
+        img.cta__img.cta__img--2(src='/img/tour-5-2.jpg', alt='')
+    .cta__content 
+        h2.heading-secondary #{secondary_text}
+        p.cta__text #{tour.duration} #{cta_text} 
+
+        if user
+            .date_div
+                h1 Please Select a Date
+                select#select_btn.form_input_date(name='StartDateId')
+                    each date in tour.startDates
+                        option(value=`${date._id}`)= date.date.toLocaleString('en-us', {month: 'long', year: 'numeric'})
+
+        if user
+            if bookedTour 
+                button#review_btn.btn.btn--green.span-all-rows(data-tour-id=`${tour.id}`) Drop a Review 
+            else 
+                button#book_btn.btn.btn--green.span-all-rows(data-tour-id=`${tour.id}`) Book Tour Now!
+        else 
+            a.btn.btn--green.span-all-rows(href='/login') Log In to Book your Tour!
+
+mixin star_Review(id)
+    svg.reviews__star(id=`${id}`, class=`reviews__star--inactive`) 
+        use(xlink:href='/img/icons.svg#icon-star')
+
 block content 
+
+    .drop_down
+
+    section.review_Form 
+        .star_container
+            +star_Review(1)
+            +star_Review(2)
+            +star_Review(3)
+            +star_Review(4)
+            +star_Review(5)
+        .review_container 
+            label(for='review') Review 
+            textarea(id='review') 
+        button.submit_review Post Review
+
     section.section-header
         .header__hero
             .header__hero-overlay &nbsp;
@@ -57,11 +100,11 @@ block content
             div 
                 .overview-box__group 
                     h2.heading-secondary.ma-bt-lg Quick facts
-                    -const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+                    -const date = tour.startDates[0].date.toLocaleString('en-us', {month: 'long', year: 'numeric'})
                     +overviewBox('Next Date', date, 'calendar')
                     +overviewBox('Difficulty', tour.difficulty, 'trending-up')
-                    +overviewBox('Participants', tour.maxGroupSize, 'icon-user')
-                    +overviewBox('Rating', `${tour.ratingsAverage} / 5`, 'icon-star')
+                    +overviewBox('Participants', tour.maxGroupSize, 'users')
+                    +overviewBox('Rating', `${tour.ratingsAverage} / 5`, 'star')
                     //- .overview-box__detail 
                     //-     svg.overview-box__icon 
                     //-         use(xlink:href='/img/icons.svg#icon-calendar')
@@ -142,15 +185,25 @@ block content
 
     section.section-cta 
         .cta
-            .cta__img.cta__img--logo 
-                img(src='/img/logo/white.png', alt='Natours Logo')
-            img.cta__img.cta__img--1(src='/img/tour-5-2.jpg', alt='')
-            img.cta__img.cta__img--2(src='/img/tour-5-2.jpg', alt='')
-            .cta__content 
-                h2.heading-secondary What are you waiting for?
-                p.cta__text #{tour.duration} days. 1 adventure. Infinite memories. Make it yours today! 
+            if bookedTour
+                +hasUserBookedTour("Did You enjoy the Tour?", "Please drop a review for others to try it out")
+            else 
+                +hasUserBookedTour('What are you waiting for?', `days. 1 adventure. Infinite memories. Make it yours today!`)
+            //- .cta__img.cta__img--logo 
+            //-     img(src='/img/logo/white.png', alt='Natours Logo')
+            //-     img.cta__img.cta__img--1(src='/img/tour-5-2.jpg', alt='')
+            //-     img.cta__img.cta__img--2(src='/img/tour-5-2.jpg', alt='')
+            //- .cta__content 
+            //-     h2.heading-secondary What are you waiting for?
+            //-     p.cta__text #{tour.duration} days. 1 adventure. Infinite memories. Make it yours today! 
 
-                if user
-                    button#book_btn.btn.btn--green.span-all-rows(data-tour-id=`${tour.id}`) Book Tour Now!
-                else 
-                    a.btn.btn--green.span-all-rows(href='/login') Log In to Book your Tour!
+            //-     select(name='StartDateId')
+            //-         each date in tour.startDates
+            //-             option(value=`${date._id}`)= date.date.toLocaleString('en-us', {month: 'long', year: 'numeric'})
+
+            //-     if user
+            //-         button#book_btn.btn.btn--green.span-all-rows(data-tour-id=`${tour.id}`) Book Tour Now!
+            //-     else 
+            //-         a.btn.btn--green.span-all-rows(href='/login') Log In to Book your Tour!
+
+    

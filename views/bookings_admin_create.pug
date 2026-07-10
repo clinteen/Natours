@@ -1,0 +1,24 @@
+extends base
+
+block content
+    main.main 
+        .login-form 
+            h2.heading-secondary.ma-bt-lg Update Booking
+            form.form#update-user-form
+                .form__group 
+                    label.form__label(for='tour') Tour: 
+                    input#tour.form__input(type='text', required)
+                .form__group 
+                    label.form__label(for='user') User: 
+                    input#user.form__input(type='number', required)
+                .form__group 
+                    label.form__label(for='price') Price: 
+                    input#price.form__input(type='number', required)
+                .form__group 
+                    label.form__label(for='paid') Paid: 
+                    input#paid.form__input(type='file')
+                .form__group 
+                    label.form__label(for='startDate') StartDate: 
+                    input#startDate.form__input(type='date')
+                .form__group 
+                    button.btn.btn--green Create Booking 

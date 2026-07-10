@@ -1,0 +1,23 @@
+extends sidebar 
+
+block sidebar-content  
+    .card-container_admin
+        each user in documents 
+            .card_admin#card_users 
+                .card_header_admin#user_header 
+                    img.form__user-photo(src=`/img/users/${user.photo}`, alt='User Photo')
+                    h1.user_name #{user.name}
+                    h2.user_email #{user.email}
+                    h2.user_role #{user.role}
+                    .card_footer_admin 
+                        a.admin_btn(href=`/admin/user-update`) Update 
+                        a.admin_btn Delete 
+                        a.admin_btn(href=`/tours/${user._id}`) View 
+
+        .pages_sections 
+            if(currentPage > 1)
+                a#previous(href=`?page=${currentPage - 1}`) Prev
+            span Page #{currentPage} of #{totalPages}
+            if(currentPage < totalPages) 
+                a#next(href=`?page=${currentPage + 1}`) Next
+        a#create_documents(href=`/admin/user-update`) Create New User

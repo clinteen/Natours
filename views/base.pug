@@ -15,6 +15,7 @@ html(lang="en")
         //- h1= tour
         //- h1= user.toUpperCase() + x
         //- //- h1 The Park Camper
+        
         // HEADER
         include _header
 
@@ -29,7 +30,11 @@ html(lang="en")
 
         script(src='/js/map.js')
         //- script(src='https://cdnjs.cloudflare.com/ajax/libs/axios/1.11.0/axios.min.js')
-        script( src='https://js.stripe.com/dahlia/stripe.js')
+        //- script( src='https://js.stripe.com/dahlia/stripe.js')
+        <script src="https://js.stripe.com/v3/"></script> 
+        //- <!-- should be v3, not dahlia -->
         script(src='/axios.min.js')
         script(type='module' src='/js/login.js')
+        script(type='module' src='/js/signup.js')
         script(type='module' src='/js/stripeSession.js')
+        script(type='module' src='/js/admin_create.js')

@@ -1,0 +1,21 @@
+extends base
+
+block content
+    main.main 
+        .login-form 
+            h2.heading-secondary.ma-bt-lg Update User
+            form.form#update-user-form
+                .form__group 
+                    label.form__label(for='tour_name') Review: 
+                    input#name.form__input(type='text', required)
+                .form__group 
+                    label.form__label(for='tour_duration') Rating: 
+                    input#email.form__input(type='number', required)
+                .form__group 
+                    label.form__label(for='maxGroupSize') User: 
+                    input#role.form__input(type='number', required)
+                .form__group 
+                    label.form__label(for='maxGroupSize') Tour: 
+                    input#photo.form__input(type='file')
+                .form__group 
+                    button.btn.btn--green Create Review 

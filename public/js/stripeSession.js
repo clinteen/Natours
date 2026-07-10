@@ -10,12 +10,20 @@ const stripe = Stripe(
 
 // var stripe = Stripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
 const bookBtn = document.getElementById('book_btn');
+const select_field = document.getElementById('select_btn');
+const review_Btn = document.getElementById('review_btn');
+// console.log(select_field.value);
 
 const payFunction = async (tourId) => {
     try {
         // 1.) Get checkout session from the server or API
-        const session = await axios(
-            `/api/v1/bookings/booking-session/${tourId}`
+        const session = await axios.get(
+            `/api/v1/bookings/booking-session/${tourId}`,
+            {
+                params: {
+                    startDate: select_field.value
+                }
+            }
         );
         // console.log(session);
 
@@ -33,8 +41,13 @@ const payFunction = async (tourId) => {
     }
 };
 
+// const reviewForm = async (tourId) => {
+
+// }
+
 if (bookBtn) {
-    bookBtn.addEventListener('click', (e) => {
+    bookBtn.addEventListener('click', async (e) => {
+        // console.log(option.value);
         e.target.textContent = 'processing...';
 
         const tourId = e.target.dataset.tourId;

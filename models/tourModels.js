@@ -76,7 +76,20 @@ const tourSchema = new mongoose.Schema(
             timestamps: true,
             select: false
         },
-        startDates: [Date],
+        // startDates: [Date],
+        startDates: [
+            {
+                date: Date,
+                participants: {
+                    type: Number,
+                    default: 0
+                },
+                soldOut: {
+                    type: Boolean,
+                    default: false
+                }
+            }
+        ],
         SecretTour: {
             type: Boolean,
             default: false
@@ -85,7 +98,7 @@ const tourSchema = new mongoose.Schema(
             // GeoJSON
             type: {
                 type: String,
-                default: 'Point',
+                // default: 'Point',
                 enum: ['Point']
             },
             coordinates: [Number],

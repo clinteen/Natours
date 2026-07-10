@@ -314,6 +314,269 @@ body {
     -ms-flex-align: center;
     align-items: center;
 }
+
+.date_div h1 {
+    font-size: 1.6rem;
+    text-align: center;
+}
+
+.form_input_date {
+    display: block;
+    font-family: inherit;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: inherit;
+    padding: 1.5rem;
+    border: none;
+    width: 100%;
+    /* background-color: #fff; */
+    background-color: #f2f2f2;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+    border-radius: 8px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.drop_down {
+    min-height: 100vh;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.233);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: none;
+}
+
+.review_Form {
+    background: #f7f7f7;
+    width: 50%;
+    height: 40rem;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    box-shadow: 0px 5px 10px 6px rgba(0, 0, 0, 0.2);
+    margin: auto;
+    position: absolute;
+    top: 18%;
+    right: 50%;
+    z-index: 5;
+    transform: translate(50%, 18%);
+    display: none;
+}
+
+.star_container {
+    margin-top: 20px;
+    padding: 20px 0;
+}
+
+.star_container svg {
+    cursor: pointer;
+}
+
+.review_container {
+    display: flex;
+    flex-direction: column;
+}
+
+.review_container label {
+    font-size: 20px;
+}
+
+.review_container #review {
+    height: 20rem;
+    width: 50rem;
+    padding: 1.2rem 1rem;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.submit_review {
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    padding: 10px;
+    background: #28b487;
+    align-self: flex-end;
+    margin: 0 10px 10px 0;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.submit_review:hover {
+    transform: translateY(-2px);
+}
+
+.card-container_admin {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    height: fit-content;
+    padding: 1rem;
+    background-color: #ebe8e8;
+    place-items: center;
+    row-gap: 1rem;
+}
+
+#card_users {
+    height: fit-content;
+}
+
+#user_header {
+    justify-content: unset;
+    row-gap: 1.1rem;
+}
+
+.card_admin {
+    width: 40rem;
+    height: 35rem;
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.card_admin .review_tour {
+    height: 10rem;
+    position: relative;
+}
+
+.card_header_admin {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card_header_admin .img_container {
+    width: 100%;
+    height: 20rem;
+    position: relative;
+}
+
+.img_container .tour_name,
+.review_tour .review_tour_name {
+    font-size: 3rem;
+    font-weight: bold;
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+}
+
+.card_div_admin {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 5rem;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.card_footer_admin {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.card_footer_admin .admin_btn {
+    padding: 1rem;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    color: black;
+    border: none;
+    outline: none;
+    border-radius: 1rem;
+    width: 10rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.card_footer_admin .admin_btn:first-child {
+    background-color: #e6e2e2;
+}
+.card_footer_admin .admin_btn:nth-child(2) {
+    background-color: #ee2626;
+}
+.card_footer_admin .admin_btn:last-child {
+    background-color: #7dd56f;
+}
+
+.card_footer_admin .admin_btn:hover {
+    transform: translateY(-3px);
+}
+
+.locations,
+.dates {
+    width: 50%;
+    height: 75%;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -80%);
+    background: white;
+    padding: 1.3rem;
+    border-radius: 0.5rem;
+    display: none;
+}
+
+.dates {
+    height: 50%;
+}
+
+.inputs_coordinates {
+    display: flex;
+    column-gap: 5rem;
+}
+
+#location_btn {
+    text-align: right;
+    margin-top: 1rem;
+}
+
+.pages_sections {
+    width: 100%;
+    height: 5rem;
+    display: flex;
+    justify-content: space-between;
+    grid-column: 2;
+}
+
+.pages_sections span {
+    font-size: 1.1rem;
+}
+
+#previous,
+#next,
+#create_documents {
+    width: 10rem;
+    padding: 0.5rem;
+    border-radius: 0.9rem;
+    background: #55c57a;
+    border: none;
+    outline: none;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+    font-size: 1.5rem;
+    display: grid;
+    place-items: center;
+}
+
+#create_documents {
+    width: 20rem;
+    padding: 1rem 0.5rem;
+}
+
 @media only screen and (max-width: 62.5em) {
     .header {
         -webkit-box-orient: vertical;

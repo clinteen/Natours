@@ -1,0 +1,20 @@
+extends sidebar  
+
+block sidebar-content  
+    section.section-reviews.card-container_admin  
+        each review in reviews
+            .card_admin  
+                .review_tour 
+                   img.img_admin(src=`/img/tours/${review.tour.imageCover}`, alt=`${review.tour.name}`)
+                   span.review_tour_name #{review.tour.name}
+                .reviews__avatar 
+                    img.reviews__avatar-img(src=`/img/users/photo.png`, alt=`${review.user.name}`)
+                    h6.reviews__user= review.user.name 
+                p.reviews__text= review.review 
+                .reviews__rating 
+                    each i in [1,2,3,4,5] 
+                        svg.reviews__star(class=`reviews__star--${i<= review.rating ? 'active' : 'inactive'}`)
+                            use(xlink:href='/img/icons.svg#icon-star')
+                .card_footer_admin 
+                    a.admin_btn(href=`/review-update`) Update 
+                    a.admin_btn Delete 

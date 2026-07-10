@@ -8,10 +8,11 @@ const factoryController = require('./factoryController');
 exports.bookingSession = catchAsync(async (req, res, next) => {
     // 1.) Get the selected tour from the database
     const tour = await Tour.findById(req.params.tourId);
+    const selectedDate = tour.startDates.id(req.query.startDate);
     // 2.) Create the stripe payment session
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        success_url: `${req.protocol}://${req.get('host')}/?tour=${req.params.tourId}&user=${req.user.id}&price=${tour.price}`,
+        success_url: `${req.protocol}://${req.get('host')}/?tour=${req.params.tourId}&user=${req.user.id}&price=${tour.price}&startDate=${selectedDate._id}`,
         cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
         customer_email: req.user.email,
         client_reference_id: req.params.tourId,
@@ -22,7 +23,7 @@ exports.bookingSession = catchAsync(async (req, res, next) => {
                     currency: 'usd',
                     product_data: {
                         name: `${tour.name} Tour`,
-                        description: tour.summary,
+                        description: `summary: ${tour.summary}\nDate: ${selectedDate.date.toDateString()}`,
                         images: [
                             `https://www.natours.dev/img/tours/${tour.imageCover}`
                         ]
@@ -60,14 +61,19 @@ exports.bookingSession = catchAsync(async (req, res, next) => {
 
 exports.createBookingAuto = catchAsync(async (req, res, next) => {
     // This method was temporary because it is UNSECURE
-    const { tour, user, price } = req.query;
+    const { tour, user, price, startDate } = req.query;
 
-    if (!tour && !user && !price) return next();
+    if (!tour && !user && !price && !startDate) return next();
+
+    const tourId = await Tour.findById(tour);
+    const selectedDate = tourId.startDates.id(startDate);
+    // console.log(req.query);
 
     await Booking.create({
         tour: tour,
         user: user,
-        price: price
+        price: price,
+        startDate: selectedDate.date
     });
 
     res.redirect('/');

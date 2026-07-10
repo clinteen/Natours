@@ -5,6 +5,7 @@ const authController = require('./../controllers/authController');
 const bookingRouter = require('./bookingsRoutes');
 
 const router = express.Router();
+// console.log('userRoutes.js loaded from:', __filename);
 
 router.use('/:userId/bookings', bookingRouter);
 
@@ -41,5 +42,13 @@ router
     .get(userController.getSingleUser)
     .patch(userController.updateSingleUser)
     .delete(userController.deleteSingleUser);
+
+// router.stack.forEach((layer) => {
+//     if (layer.route) {
+//         console.log(Object.keys(layer.route.methods), layer.route.path);
+//     } else if (layer.name) {
+//         console.log('MIDDLEWARE:', layer.name);
+//     }
+// });
 
 module.exports = router;

@@ -40,6 +40,7 @@ const sendToken = (user, statusCode, res) => {
 };
 
 exports.userSignUp = catchAsync(async (req, res, next) => {
+    console.log(req.body);
     const newUser = await User.create({
         name: req.body.name,
         email: req.body.email,
@@ -50,7 +51,7 @@ exports.userSignUp = catchAsync(async (req, res, next) => {
     });
 
     const url = `${req.protocol}://${req.get('host')}/me`;
-    await new Email(newUser, url).sendWelcome();
+    // await new Email(newUser, url).sendWelcome();
 
     sendToken(newUser, 201, res);
 
@@ -65,6 +66,7 @@ exports.userSignUp = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
+    // console.log('LOGIN HANDLER HIT');
     //1.) Check if the user imputed the name and password
     const { email, password } = req.body;
     if (!email || !password) {
@@ -89,6 +91,7 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.protect_routes = catchAsync(async (req, res, next) => {
+    console.log('PROTECT ROUTES HIT', req.originalUrl);
     //1.) Check if the user has a token
     let token;
 
@@ -169,6 +172,7 @@ exports.isUserLoggedIn = async (req, res, next) => {
             }
 
             // THERE IS A LOGGED IN USER
+            req.user = currentUser;
             res.locals.user = currentUser;
             return next();
         } catch (err) {

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Tour = require('./tourModels');
 
 const bookingSchema = new mongoose.Schema({
     tour: {
@@ -22,6 +23,10 @@ const bookingSchema = new mongoose.Schema({
     paid: {
         type: Boolean,
         default: true
+    },
+    startDate: {
+        type: Date,
+        required: [true, 'Please select a start date for the tour']
     }
 });
 
@@ -31,10 +36,7 @@ bookingSchema.pre(/^find/, async function () {
     this.populate({
         path: 'user',
         select: 'name email'
-    }).populate({
-        path: 'tour',
-        select: 'name duration'
-    });
+    }).populate('tour');
 });
 
 const Booking = mongoose.model('Booking', bookingSchema);

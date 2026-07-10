@@ -38,7 +38,10 @@ router
     .get(tourController.getAllTours)
     .post(
         authController.protect_routes,
+        tourController.resizeUploadImage,
+        tourController.updateTourImage,
         authController.restrictTo('admin', 'lead-guide'),
+        tourController.setTourBody,
         tourController.createTour
     );
 
