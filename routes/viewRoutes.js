@@ -64,15 +64,19 @@ router.use(
 );
 
 router.get('/admin/manage-tours', viewController.manageTours);
-
-router.get('/admin/tour-update', viewController.updateTourForm);
+router.get('/admin/tour-update', viewController.createNewTour);
+router.get('/admin/tour-update/:id', viewController.updateTour);
 
 router.get('/admin/manage-users', viewController.manageUsers);
-
-router.get('/admin/user-update', viewController.updateUserForm);
+router.get('/admin/user-update', viewController.createNewUser);
+router.get('/admin/user-update/:id', viewController.updateUser);
 
 router.get('/admin/manage-reviews', viewController.manageReviews);
+router.get('/admin/review-update', viewController.createNewReview);
+router.get('/admin/review-update/:id', viewController.updateReview);
 
-router.get('/admin/review-update', viewController.updateReviewForm);
+router.get('/admin/manage-bookings', viewController.manageBookings);
+router.get('/admin/booking-update', viewController.createNewBooking);
+router.get('/admin/booking-update/:id', viewController.updateBooking);
 
 module.exports = router;

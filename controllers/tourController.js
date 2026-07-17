@@ -6,50 +6,111 @@ const asyncCatch = require('./../utils/AsyncCatchError');
 const AppError = require('./../utils/AppError');
 const factoryController = require('./factoryController');
 
-exports.setTourBody = asyncCatch(async (req, res, next) => {
-    console.log(req.body);
+// exports.setTourBody = asyncCatch(async (req, res, next) => {
+//     console.log(req.body);
 
-    // 1. Parse startLocation - this should be 1 object with coordinates
-    if (typeof req.body.startLocation === 'string') {
-        let parsed = JSON.parse(req.body.startLocation);
-        req.body.startLocation = Array.isArray(parsed) ? parsed[0] : parsed; // take first if array
+//     // 1. Parse startLocation - this should be 1 object with coordinates
+//     if (typeof req.body.startLocation === 'string') {
+//         let parsed = JSON.parse(req.body.startLocation);
+//         req.body.startLocation = Array.isArray(parsed) ? parsed[0] : parsed; // take first if array
 
-        // Cast coordinates to numbers
-        if (req.body.startLocation.coordinates) {
-            req.body.startLocation.coordinates =
-                req.body.startLocation.coordinates.map(Number);
+//         // Cast coordinates to numbers
+//         if (req.body.startLocation.coordinates) {
+//             req.body.startLocation.coordinates =
+//                 req.body.startLocation.coordinates.map(Number);
+//         }
+//     }
+
+//     // 2. Parse locations - this is the array with days
+//     if (typeof req.body.locations === 'string') {
+//         req.body.locations = JSON.parse(req.body.locations).map((loc) => ({
+//             ...loc,
+//             day: +loc.day,
+//             coordinates: loc.coordinates.map(Number)
+//         }));
+//     }
+
+//     if (!req.body.startLocation || !req.body.startLocation.coordinates) {
+//         delete req.body.startLocation; // don't save it at all
+//     }
+
+//     // 3. Parse startDates
+//     if (req.body.startDates) {
+//         req.body.startDates = JSON.parse(req.body.startDates);
+//     }
+
+//     // 4. Cast
+//     req.body.SecretTour = req.body.SecretTour === 'true';
+//     req.body.duration = +req.body.duration;
+//     req.body.maxGroupSize = +req.body.maxGroupSize;
+//     req.body.price = +req.body.price;
+//     req.body.priceDiscount = req.body.price_discount
+//         ? +req.body.price_discount
+//         : undefined;
+
+//     next();
+// });
+
+exports.parseTourBody = (type, obj, ...lists) => {
+    lists.forEach((list) => {
+        const val = obj[list];
+
+        if (!val || val === '' || val === '[]' || val === '{}') {
+            delete obj[list];
+            return;
         }
-    }
 
-    // 2. Parse locations - this is the array with days
-    if (typeof req.body.locations === 'string') {
-        req.body.locations = JSON.parse(req.body.locations).map((loc) => ({
-            ...loc,
-            day: +loc.day,
-            coordinates: loc.coordinates.map(Number)
-        }));
-    }
+        if (typeof val === 'string') {
+            if (type === 'object') {
+                obj[list] = JSON.parse(val);
+            } else if (type === 'number') {
+                obj[list] = Number(val);
+            } else if (type === 'boolean') {
+                obj[list] = val === 'true';
+            }
+        }
+    });
+};
+// const parseTourBody = (type, obj, ...lists) => {
+//     if (type === 'object') {
+//         lists.forEach((list) => {
+//             const val = obj;
+//             if (!val || val === '' || val === '[]' || val === '{}') {
+//                 delete obj;
+//                 return;
+//             }
 
-    if (!req.body.startLocation || !req.body.startLocation.coordinates) {
-        delete req.body.startLocation; // don't save it at all
-    }
+//             console.log(obj[list]);
+//             if (val === 'string') {
+//                 obj[list] = JSON.parse(obj[list]);
+//             }
+//         });
+//     } else if (type === 'number') {
+//         lists.forEach((list) => {
+//             const val = obj;
+//             if (!val || val === '' || val === '[]' || val === '{}') {
+//                 delete obj;
+//                 return;
+//             }
 
-    // 3. Parse startDates
-    if (req.body.startDates) {
-        req.body.startDates = JSON.parse(req.body.startDates);
-    }
+//             if (val === 'string') {
+//                 obj[list] = JSON.parse(obj[list]);
+//             }
+//         });
+//     } else if (type === 'boolean') {
+//         lists.forEach((list) => {
+//             const val = obj;
+//             if (!val || val === '' || val === '[]' || val === '{}') {
+//                 delete obj;
+//                 return;
+//             }
 
-    // 4. Cast
-    req.body.SecretTour = req.body.SecretTour === 'true';
-    req.body.duration = +req.body.duration;
-    req.body.maxGroupSize = +req.body.maxGroupSize;
-    req.body.price = +req.body.price;
-    req.body.priceDiscount = req.body.price_discount
-        ? +req.body.price_discount
-        : undefined;
-
-    next();
-});
+//             if (typeof val === 'string') {
+//                 obj[list] = JSON.parse(obj[list]);
+//             }
+//         });
+//     }
+// };
 
 const multerStorage = multer.memoryStorage();
 
@@ -72,27 +133,34 @@ const upload = multer({
     fileFilter: multerFilter // ✅
 });
 
-exports.updateTourImage = asyncCatch(async (req, res, next) => {
-    // 0. Parse arrays and objects first
-    if (req.body.startDates)
-        req.body.startDates = JSON.parse(req.body.startDates);
-    if (req.body.startLocation) {
-        req.body.startLocation = JSON.parse(req.body.startLocation)[0]; // ✅ your schema expects 1 object, not array
-        req.body.startLocation.coordinates =
-            req.body.startLocation.coordinates.map(Number);
-    }
-    if (req.body.locations) {
-        req.body.locations = JSON.parse(req.body.locations).map((loc) => ({
-            ...loc,
-            day: +loc.day,
-            coordinates: loc.coordinates.map(Number)
-        }));
-    }
+exports.changeFormToJSON = asyncCatch(async (req, res, next) => {
+    exports.parseTourBody(
+        'object',
+        req.body,
+        'startDates',
+        'startLocation',
+        'locations',
+        'guides'
+    );
+    exports.parseTourBody(
+        'number',
+        req.body,
+        'duration',
+        'maxGroupSize',
+        'price',
+        'priceDiscount'
+    );
+    exports.parseTourBody('boolean', req.body, 'SecretTour');
 
+    console.log(req.body);
+    next();
+});
+
+exports.updateTourImage = asyncCatch(async (req, res, next) => {
     // 1. If no files uploaded, just continue - don't return
     if (!req.files) return next();
 
-    const tourId = req.params.id || Date.now();
+    const tourId = req.params.id || req.user.name;
 
     // 2.) Image Cover - check separately
     if (req.files.imageCover) {
@@ -120,18 +188,75 @@ exports.updateTourImage = asyncCatch(async (req, res, next) => {
         );
     }
 
-    // 4.) Cast types
-    req.body.SecretTour =
-        req.body.SecretTour === 'true' || req.body.SecretTour === true;
-    req.body.duration = +req.body.duration;
-    req.body.maxGroupSize = +req.body.maxGroupSize;
-    req.body.price = +req.body.price;
-    req.body.priceDiscount = req.body.price_discount
-        ? +req.body.price_discount
-        : undefined;
-
     next();
 });
+
+exports.resizeUploadImage = upload.fields([
+    { name: 'imageCover', maxCount: 1 },
+    { name: 'images', maxCount: 3 }
+]);
+
+// exports.updateTourImage = asyncCatch(async (req, res, next) => {
+//     // 0. Parse arrays and objects first
+//     if (req.body.startDates)
+//         req.body.startDates = JSON.parse(req.body.startDates);
+//     if (req.body.startLocation) {
+//         req.body.startLocation = JSON.parse(req.body.startLocation)[0]; // ✅ your schema expects 1 object, not array
+//         req.body.startLocation.coordinates =
+//             req.body.startLocation.coordinates.map(Number);
+//     }
+//     if (req.body.locations) {
+//         req.body.locations = JSON.parse(req.body.locations).map((loc) => ({
+//             ...loc,
+//             day: +loc.day,
+//             coordinates: loc.coordinates.map(Number)
+//         }));
+//     }
+
+//     // 1. If no files uploaded, just continue - don't return
+//     if (!req.files) return next();
+
+//     const tourId = req.params.id || user.name;
+
+//     // 2.) Image Cover - check separately
+//     if (req.files.imageCover) {
+//         req.body.imageCover = `tour-${tourId}-${Date.now()}-cover.jpeg`;
+//         await sharp(req.files.imageCover[0].buffer)
+//             .resize(2000, 1333)
+//             .toFormat('jpeg')
+//             .jpeg({ quality: 90 })
+//             .toFile(`public/img/tours/${req.body.imageCover}`);
+//     }
+
+//     // 3.) Images - check separately
+//     if (req.files.images) {
+//         req.body.images = [];
+//         await Promise.all(
+//             req.files.images.map(async (file, i) => {
+//                 const filename = `tour-${tourId}-${Date.now()}-${i + 1}.jpeg`;
+//                 await sharp(file.buffer)
+//                     .resize(2000, 1333)
+//                     .toFormat('jpeg')
+//                     .jpeg({ quality: 90 })
+//                     .toFile(`public/img/tours/${filename}`);
+//                 req.body.images.push(filename);
+//             })
+//         );
+//     }
+
+//     // 4.) Cast types
+//     req.body.SecretTour =
+//         req.body.SecretTour === 'true' || req.body.SecretTour === true;
+//     req.body.duration = +req.body.duration;
+//     req.body.maxGroupSize = +req.body.maxGroupSize;
+//     req.body.price = +req.body.price;
+//     req.body.priceDiscount = req.body.price_discount
+//         ? +req.body.price_discount
+//         : undefined;
+
+//     next();
+// });
+
 // const multerStorage = multer.memoryStorage();
 
 // const multerFilter = (req, file, cb) => {
@@ -152,11 +277,6 @@ exports.updateTourImage = asyncCatch(async (req, res, next) => {
 //     multerStorage,
 //     multerFilter
 // });
-
-exports.resizeUploadImage = upload.fields([
-    { name: 'imageCover', maxCount: 1 },
-    { name: 'images', maxCount: 3 }
-]);
 
 // // upload.single() (req.file)  Single file
 // // upload.array('images', 5) (req.files) Multiple files but same field name

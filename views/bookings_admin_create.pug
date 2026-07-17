@@ -3,22 +3,35 @@ extends base
 block content
     main.main 
         .login-form 
-            h2.heading-secondary.ma-bt-lg Update Booking
-            form.form#update-user-form
+            h2.heading-secondary.ma-bt-lg #{bookingBeingUpdated ? 'Update Booking' : 'Create Booking'}
+            form.form#create_booking_form
                 .form__group 
                     label.form__label(for='tour') Tour: 
-                    input#tour.form__input(type='text', required)
+                    select#tours.form__input(name='tours', required)
+                        
+                        if bookingBeingUpdated 
+                            option(value=`${bookingBeingUpdated.tour._id}`)= bookingBeingUpdated.tour.name 
+                        else
+                            option
+                            each tour in tours 
+                                option(value=`${tour._id}`)= tour.name
                 .form__group 
                     label.form__label(for='user') User: 
-                    input#user.form__input(type='number', required)
+                    select#users.form__input(name='users', required)
+                        if bookingBeingUpdated 
+                            option(value=`${bookingBeingUpdated.user._id}`)= bookingBeingUpdated.user.name
+                        else
+                            option
+                            each user in users 
+                                option(value=`${user._id}`)= user.name
                 .form__group 
                     label.form__label(for='price') Price: 
-                    input#price.form__input(type='number', required)
+                    input#price.form__input(type='number', required, value=`${bookingBeingUpdated ? bookingBeingUpdated.price : ''}`)
                 .form__group 
                     label.form__label(for='paid') Paid: 
-                    input#paid.form__input(type='file')
+                    input#paid.form__input(type='text', value=`${bookingBeingUpdated ? bookingBeingUpdated.paid : ''}`)
                 .form__group 
                     label.form__label(for='startDate') StartDate: 
-                    input#startDate.form__input(type='date')
+                    input#startDate.form__input(type='date', required, value=`${bookingBeingUpdated ? bookingBeingUpdated.startDate : ''}`)
                 .form__group 
-                    button.btn.btn--green Create Booking 
+                    button#bookings_btn.btn.btn--green(data-action=`${bookingBeingUpdated ? 'update' : 'create'}`, data-booking-id=`${bookingBeingUpdated ? bookingBeingUpdated._id : ''}`) #{bookingBeingUpdated ? 'Update Booking' : 'Create Booking'} 

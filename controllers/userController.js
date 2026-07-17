@@ -4,6 +4,7 @@ const asyncCatch = require('./../utils/AsyncCatchError');
 const User = require('./../models/userModel');
 const AppError = require('./../utils/AppError');
 const factoryController = require('./factoryController');
+const tourController = require('./tourController');
 
 // const multerStorage = multer.diskStorage({
 //     destination: (req, file, cb) => {
@@ -39,15 +40,21 @@ const upload = multer({
 exports.updateUserPhoto = upload.single('photo');
 
 exports.resizeUserPhoto = asyncCatch(async (req, res, next) => {
-    if (!req.file) return next();
+    if (!req.file) {
+        delete req.body.photo;
 
-    req.file.filename = `user-${req.user.id}-${Date.now()}}.jpeg`;
+        return next();
+    }
+
+    req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
 
     await sharp(req.file.buffer)
         .resize(500, 500)
         .toFormat('jpeg')
         .jpeg({ quality: 90 })
         .toFile(`public/img/users/${req.file.filename}`);
+
+    req.body.photo = req.file.filename;
 
     next();
 });
@@ -145,12 +152,25 @@ exports.updateSingleUser = factoryController.updateDocument(User);
 //     });
 // };
 
-exports.createUser = (req, res) => {
-    res.status(504).json({
-        status: 'success',
-        message: 'This page does not exist! Please use /sign-up page'
-    });
+exports.parseTourBody = (req, res, next) => {
+    tourController.parseTourBody(
+        'nothing',
+        req.body,
+        'role',
+        'active',
+        'photo'
+    );
+
+    next();
 };
+
+exports.createUser = factoryController.createDocument(User);
+// exports.createUser = (req, res) => {
+//     res.status(504).json({
+//         status: 'success',
+//         message: 'This page does not exist! Please use /sign-up page'
+//     });
+// };
 // exports.createUser = factoryController.createDocument(User);
 
 exports.deleteSingleUser = factoryController.deleteDocument(User);

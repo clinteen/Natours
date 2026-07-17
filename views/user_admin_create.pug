@@ -3,22 +3,30 @@ extends base
 block content
     main.main 
         .login-form 
-            h2.heading-secondary.ma-bt-lg Update User
-            form.form#update-user-form
+            h2.heading-secondary.ma-bt-lg #{userBeingUpdated ? 'Update User' : 'Create User'}
+            form.form#create_user_form(enctype='multipart/form-data')
                 .form__group 
                     label.form__label(for='tour_name') Name: 
-                    input#name.form__input(type='text', required)
+                    input#name.form__input(type='text', required, value=`${userBeingUpdated ? userBeingUpdated.name : ''}`)
+                
+                if !userBeingUpdated
+                    .form__group 
+                        label.form__label(for='password') Password: 
+                        input#password.form__input(type='password', required)
+                    .form__group 
+                        label.form__label(for='confirm_password') Confirm Password: 
+                        input#confirm_password.form__input(type='password', required)
                 .form__group 
                     label.form__label(for='tour_duration') Email: 
-                    input#email.form__input(type='number', required)
+                    input#email.form__input(type='email', required, value=`${userBeingUpdated ? userBeingUpdated.email : ''}`)
                 .form__group 
                     label.form__label(for='maxGroupSize') Role: 
-                    input#role.form__input(type='number', required)
+                    input#role.form__input(type='text', value=`${userBeingUpdated ? userBeingUpdated.role : ''}`)
                 .form__group 
                     label.form__label(for='maxGroupSize') Photo: 
                     input#photo.form__input(type='file')
                 .form__group 
                     label.form__label(for='maxGroupSize') Active: 
-                    input#active.form__input(type='text')
+                    input#active.form__input(type='text', value=`${userBeingUpdated ? userBeingUpdated.active : ''}`)
                 .form__group 
-                    button.btn.btn--green Create User 
+                    button#users_btn.btn.btn--green(data-action=`${userBeingUpdated ? 'update' : 'create'}`, data-user-id=`${userBeingUpdated ? userBeingUpdated._id : ''}`) #{userBeingUpdated ? 'Update User' : 'Create User'}

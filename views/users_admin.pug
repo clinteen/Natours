@@ -10,8 +10,8 @@ block sidebar-content
                     h2.user_email #{user.email}
                     h2.user_role #{user.role}
                     .card_footer_admin 
-                        a.admin_btn(href=`/admin/user-update`) Update 
-                        a.admin_btn Delete 
+                        a.admin_btn(href=`/admin/user-update/${user._id}`) Update 
+                        a.delete_resource.admin_btn(data-id=`${user._id}` data-resource='users') Delete 
                         a.admin_btn(href=`/tours/${user._id}`) View 
 
         .pages_sections 

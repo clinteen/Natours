@@ -3,19 +3,31 @@ extends base
 block content
     main.main 
         .login-form 
-            h2.heading-secondary.ma-bt-lg Update User
-            form.form#update-user-form
+            h2.heading-secondary.ma-bt-lg #{review ? 'Update Review' : 'Create Review'}
+            form.form#create_review_form
                 .form__group 
-                    label.form__label(for='tour_name') Review: 
-                    input#name.form__input(type='text', required)
+                    label.form__label(for='review') Review: 
+                    textarea#review.form__input(type='text', required) #{review ? review.review : ''}
                 .form__group 
-                    label.form__label(for='tour_duration') Rating: 
-                    input#email.form__input(type='number', required)
+                    label.form__label(for='rating') Rating: 
+                    input#rating.form__input(type='number', step='any', required, value=`${review ? review.rating : ''}`)
                 .form__group 
-                    label.form__label(for='maxGroupSize') User: 
-                    input#role.form__input(type='number', required)
+                    label.form__label(for='users') User: 
+                    select#users.form__input(name='users', required)
+                        if users
+                            option
+                            each user in users 
+                                option(value=`${user._id}`)= user.name
+                        else if review  
+                                option(value=`${review.user._id}`)= review.user.name
                 .form__group 
-                    label.form__label(for='maxGroupSize') Tour: 
-                    input#photo.form__input(type='file')
+                    label.form__label(for='tours') Tour: 
+                    select#tours.form__input(name='tours', required)
+                        if tours
+                            option
+                            each tour in tours 
+                                option(value=`${tour._id}`)= tour.name
+                        else if review 
+                            option(value=`${review.tour._id}`)= review.tour.name
                 .form__group 
-                    button.btn.btn--green Create Review 
+                    button#review_btn.btn.btn--green(data-action=`${review? 'update' : 'create'}`, data-review-id=`${review? review._id : ''}`) #{review ? 'Update Review' : 'Create Review'} 

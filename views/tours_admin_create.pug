@@ -3,32 +3,32 @@ extends base
 block content
     main.main 
         .login-form 
-            h2.heading-secondary.ma-bt-lg Update Tour 
+            h2.heading-secondary.ma-bt-lg #{tourGuides ? 'Update Tour' : 'Create Tour'} 
             form.form#create_tour_form(enctype='multipart/form-data')
                 .form__group 
                     label.form__label(for='tour_name') Tour Name: 
-                    input#tour_name.form__input(type='text', required)
+                    input#tour_name.form__input(type='text', required, value=`${tourGuides ? tourGuides.name : ''}`)
                 .form__group 
                     label.form__label(for='tour_duration') Tour Duration: 
-                    input#tour_duration.form__input(type='number', required)
+                    input#tour_duration.form__input(type='number', required, value=`${tourGuides ? tourGuides.duration : ''}`)
                 .form__group 
                     label.form__label(for='maxGroupSize') Max Group Size: 
-                    input#maxGroupSize.form__input(type='number', required)
+                    input#maxGroupSize.form__input(type='number', required, value=`${tourGuides ? tourGuides.maxGroupSize : ''}`)
                 .form__group 
                     label.form__label(for='difficulty') Difficulty: 
-                    input#difficulty.form__input(type='text', required)
+                    input#difficulty.form__input(type='text', required, value=`${tourGuides ? tourGuides.difficulty : ''}`)
                 .form__group 
                     label.form__label(for='price') Price: 
-                    input#price.form__input(type='number', required)
+                    input#price.form__input(type='number', required, value=`${tourGuides ? tourGuides.price : ''}`)
                 .form__group 
                     label.form__label(for='price_discount') Price Discount: 
-                    input#price_discount.form__input(type='number')
+                    input#price_discount.form__input(type='number', value=`${tourGuides ? tourGuides.priceDiscount : ''}`)
                 .form__group 
                     label.form__label(for='summary') Summary: 
-                    input#summary.form__input(type='text', required)
+                    textarea#summary.form__input(type='text', required)= `${tourGuides ? tourGuides.summary : ''}`
                 .form__group 
                     label.form__label(for='description') Description: 
-                    input#description.form__input(type='text')
+                    textarea#description.form__input(type='text')= `${tourGuides ? tourGuides.description : ''}`
                 .form__group
                     .dates_div 
                         label.form__label(for='startDates') StartDates:  
@@ -46,19 +46,31 @@ block content
                 .form__group 
                     label.form__label(for='guides') Guides:
                     select#guides.form__input(name='guides')
-                        each guide in users 
-                            if guide.role === 'guide'
-                                option(value=`${guide._id}`)= guide.name
-                                //- input#guides.form__input(type='number', name='guides')
+                        if tourGuides 
+                            each guide in tourGuides.guides
+                                if guide.role === 'guide' 
+                                    option(value=`${guide._id}`)= guide.name
+                        else
+                            option
+                            each guide in users 
+                                if guide.role === 'guide'
+                                    option(value=`${guide._id}`)= guide.name
+                                    //- input#guides.form__input(type='number', name='guides')
                 .form__group
                         label.form__label(for='lead-guides') Lead Guides:
                         select#lead-guides.form__input(name='guides')
-                            each guide in users 
-                                if guide.role === 'lead-guide'
-                                    option(value=`${guide._id}`)= guide.name
+                            if tourGuides
+                                each guide in tourGuides.guides
+                                    if guide.role === 'lead-guide' 
+                                        option(value=`${guide._id}`)= guide.name 
+                            else
+                                option
+                                each guide in users 
+                                    if guide.role === 'lead-guide'
+                                        option(value=`${guide._id}`)= guide.name
                 .form__group 
                     label.form__label(for='secret_tour') Secret Tour:  
-                    input#secret_tour.form__input(type='boolean', name='secret_tour')
+                    input#secret_tour.form__input(type='boolean', name='secret_tour', value=`${tourGuides ? tourGuides.SecretTour : ''}`)
                 .form__group 
                     label.form__label(for='image_cover') Image Cover:  
                     input#image_cover.form__input(type='file', name='imageCover', required)
@@ -67,7 +79,7 @@ block content
                     input#images.form__input(type='file', name='images', multiple)
                     span Hold C'trl to select multiple files
                 .form__group 
-                    button.btn.btn--green Create Tour 
+                    button#tour_btn.btn.btn--green(data-action=`${tourGuides ? 'update' : 'create'}`, data-tour-id=`${tourGuides ? tourGuides._id : ''}`) #{tourGuides ? 'Update Tour' : 'Create Tour'}
 
     
     form.locations
@@ -89,6 +101,24 @@ block content
             label.form__label(for='day') Day: 
             input#day.form__input(type='text')
         .form_group#location_btn 
+            button.btn.btn--green.create_location Add
+
+    form.start_location
+        .form_group 
+            label.form__label(for='start_loc_type') Type 
+            input#start_loc_type.form__input(type='text')
+        .form_group#start_loc_coordinates_group 
+            label.form__label(for='start_loc_coordinates') Coordinates:
+            .inputs_coordinates 
+                input#start_loc_coordinates_1.form__input(type='number', placeholder='latitude', step='any')
+                input#start_loc_coordinates_2.form__input(type='number', placeholder='longitude', step='any')
+        .form_group 
+            label.form__label(for='start_loc_address') Address: 
+            input#start_loc_address.form__input(type='text')
+        .form_group 
+            label.form__label(for='start_loc_description_location') Description: 
+            input#start_loc_description_loc.form__input(type='text')
+        .form_group#start_loc_location_btn 
             button.btn.btn--green.create_location Add
 
     form.dates

@@ -26,8 +26,8 @@ block sidebar-content
                                 use(xlink:href='/img/icons.svg#icon-map-pin')
                             span Rating Quantity: #{tour.ratingsQuantity}
                     .card_footer_admin 
-                        a.admin_btn(href=`/admin/tour-update`) Update 
-                        a.admin_btn Delete 
+                        a.admin_btn(href=`/admin/tour-update/${tour._id}`) Update 
+                        a.delete_resource.admin_btn(data-id=`${tour._id}` data-resource='tours') Delete
                         a.admin_btn(href=`/tours/${tour.slug}`) View 
         .pages_sections 
             if(currentPage > 1)

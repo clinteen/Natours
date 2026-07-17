@@ -2,6 +2,34 @@ extends sidebar
 
 block sidebar-content  
     section.section-reviews.card-container_admin  
-        each review in reviews
+        each booking in documents
             .card_admin  
-                
+                .card_header_admin 
+                    .img_container
+                        img.img_admin(src=`/img/tours/${booking.tour.imageCover}`, alt=`${booking.tour.name}`)
+                        span.tour_name #{booking.tour.name}
+                    .card_div_admin 
+                        .card__data
+                            svg.card__icon 
+                                use(xlink:href='/img/icons.svg#icon-map-pin')
+                            span Price: #{booking.price}
+                        .card__data
+                            svg.card__icon 
+                                use(xlink:href='/img/icons.svg#icon-map-pin')
+                            span User: #{booking.user.name}
+                        .card__data
+                            svg.card__icon 
+                                use(xlink:href='/img/icons.svg#icon-map-pin')
+                            span Starts On: #{booking.startDate.toLocaleString('en-us', {month: 'long', year: 'numeric'})}
+                    .card_footer_admin 
+                        a.admin_btn(href=`/admin/booking-update/${booking._id}`) Update 
+                        a.delete_resource.admin_btn(data-id=`${booking._id}` data-resource='bookings') Delete 
+                        a.admin_btn View
+
+        .pages_sections 
+            if(currentPage > 1)
+                a#previous(href=`?page=${currentPage - 1}`) Prev
+            span Page #{currentPage} of #{totalPages}
+            if(currentPage < totalPages) 
+                a#next(href=`?page=${currentPage + 1}`) Next
+        a#create_documents(href=`/admin/booking-update`) Create New Booking        

@@ -43,22 +43,21 @@ mixin hasUserBookedTour(secondary_text, cta_text, select_Tag)
         p.cta__text #{tour.duration} #{cta_text} 
 
         if user
-            .date_div
-                h1 Please Select a Date
-                select#select_btn.form_input_date(name='StartDateId')
-                    each date in tour.startDates
-                        option(value=`${date._id}`)= date.date.toLocaleString('en-us', {month: 'long', year: 'numeric'})
-
-        if user
             if bookedTour 
                 button#review_btn.btn.btn--green.span-all-rows(data-tour-id=`${tour.id}`) Drop a Review 
             else 
+                .date_div
+                    h1 Please Select a Date
+                    select#select_btn.form_input_date(name='StartDateId', required)
+                        option
+                        each date in tour.startDates
+                            option(value=`${date._id}`)= date.date.toLocaleString('en-us', {month: 'long', year: 'numeric'})
                 button#book_btn.btn.btn--green.span-all-rows(data-tour-id=`${tour.id}`) Book Tour Now!
         else 
             a.btn.btn--green.span-all-rows(href='/login') Log In to Book your Tour!
 
 mixin star_Review(id)
-    svg.reviews__star(id=`${id}`, class=`reviews__star--inactive`) 
+    svg.reviews__star(id=`${id}`, class=`reviews__star--inactive stars`) 
         use(xlink:href='/img/icons.svg#icon-star')
 
 block content 

@@ -77,7 +77,7 @@ reviewSchema.post('save', async function () {
 
 reviewSchema.post(/^findOneAnd/, async function (doc) {
     // console.log(doc);
-    //doc.contructor.calcAvgRatings(doc.tour) | This does not work because the lean property is set to true when we update
+    //doc.constructor.calcAvgRatings(doc.tour) | This does not work because the lean property is set to true when we update
     this.model.calcAvgRatings(doc.tour);
 });
 
@@ -93,7 +93,7 @@ reviewSchema.pre(/^find/, async function () {
     this.populate({
         path: 'user',
         select: 'name photo'
-    });
+    }).populate('tour');
 });
 
 const Review = mongoose.model('Review', reviewSchema);

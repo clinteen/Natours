@@ -16,8 +16,8 @@ block sidebar-content
                         svg.reviews__star(class=`reviews__star--${i<= review.rating ? 'active' : 'inactive'}`)
                             use(xlink:href='/img/icons.svg#icon-star')
                 .card_footer_admin 
-                    a.admin_btn(href=`/admin/review-update`) Update 
-                    a.admin_btn Delete 
+                    a.admin_btn(href=`/admin/review-update/${review._id}`) Update 
+                    a.delete_resource.admin_btn(data-id=`${review._id}` data-resource='reviews') Delete 
         
         .pages_sections 
             if(currentPage > 1)

@@ -4,6 +4,7 @@ const AppError = require('./../utils/AppError');
 
 exports.createDocument = (Model) => {
     return catchAsync(async (req, res, next) => {
+        // console.log('Received');
         // console.log(req.body);
         const doc = await Model.create(req.body);
 

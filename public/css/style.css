@@ -356,7 +356,7 @@ body {
     width: 50%;
     height: 40rem;
     border-radius: 16px;
-    display: flex;
+    /* display: flex; */
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
@@ -515,7 +515,8 @@ body {
 }
 
 .locations,
-.dates {
+.dates,
+.start_location {
     width: 50%;
     height: 75%;
     position: absolute;

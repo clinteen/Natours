@@ -16,6 +16,7 @@ const manageResources = (Model, title, pug_file, populateOptions) => {
         if (populateOptions) query = query.populate(populateOptions);
 
         const documents = await query;
+        console.log(documents.length);
         const totalDocuments = await Model.countDocuments();
 
         res.status(200).render(pug_file, {
@@ -145,18 +146,37 @@ exports.manageTours = manageResources(
     'tours_admin'
 );
 
-exports.updateTourForm = catchAsync(async (req, res, next) => {
+exports.createNewTour = catchAsync(async (req, res, next) => {
     const users = await User.find();
 
     res.status(200).render('tours_admin_create', {
-        title: 'Update Tour',
+        title: 'Create Tour',
         users: users
     });
 });
 
-exports.updateUserForm = catchAsync(async (req, res, next) => {
+exports.updateTour = catchAsync(async (req, res, next) => {
+    const tourGuides = await Tour.findById(req.params.id);
+    console.log(tourGuides);
+
+    res.status(200).render('tours_admin_create', {
+        title: 'Update Tour',
+        tourGuides
+    });
+});
+
+exports.createNewUser = catchAsync(async (req, res, next) => {
     res.status(200).render('user_admin_create', {
-        title: 'Update User'
+        title: 'Create User'
+    });
+});
+
+exports.updateUser = catchAsync(async (req, res, next) => {
+    const userBeingUpdated = await User.findById(req.params.id);
+
+    res.status(200).render('user_admin_create', {
+        title: 'Update User',
+        userBeingUpdated
     });
 });
 
@@ -173,8 +193,51 @@ exports.manageReviews = manageResources(
     'tour'
 );
 
-exports.updateReviewForm = catchAsync(async (req, res, next) => {
+exports.createNewReview = catchAsync(async (req, res, next) => {
+    const tours = await Tour.find();
+    const users = await User.find();
+
     res.status(200).render('reviews_admin_create', {
-        title: 'Update Review'
+        title: 'Create Review',
+        tours,
+        users
+    });
+});
+
+exports.updateReview = catchAsync(async (req, res, next) => {
+    const userId = req.params.id;
+    const review = await Review.findById(userId);
+    // console.log(review);
+
+    res.status(200).render('reviews_admin_create', {
+        title: 'Update Review',
+        review
+    });
+});
+
+exports.manageBookings = manageResources(
+    Booking,
+    'Manage Bookings for Admin',
+    'bookings_admin',
+    ['tour', 'user']
+);
+
+exports.createNewBooking = catchAsync(async (req, res, next) => {
+    const tours = await Tour.find();
+    const users = await User.find();
+
+    res.status(200).render('bookings_admin_create', {
+        title: 'Create Booking',
+        tours,
+        users
+    });
+});
+
+exports.updateBooking = catchAsync(async (req, res, next) => {
+    const bookingBeingUpdated = await Booking.findById(req.params.id);
+
+    res.status(200).render('bookings_admin_create', {
+        title: 'Update Booking',
+        bookingBeingUpdated
     });
 });

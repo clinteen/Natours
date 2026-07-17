@@ -31,16 +31,26 @@ router.delete('/deleteMe', userController.deleteMe);
 
 router.get('/me', userController.getMe, userController.getSingleUser);
 
-router.use(authController.restrictTo('admin'));
+router.use(authController.restrictTo('admin', 'lead-guide'));
 
 router
     .route('/')
     .get(userController.getAllUsers)
-    .post(userController.createUser);
+    .post(
+        userController.updateUserPhoto,
+        userController.resizeUserPhoto,
+        userController.parseTourBody,
+        userController.createUser
+    );
 router
     .route('/:id')
     .get(userController.getSingleUser)
-    .patch(userController.updateSingleUser)
+    .patch(
+        userController.updateUserPhoto,
+        userController.resizeUserPhoto,
+        userController.parseTourBody,
+        userController.updateSingleUser
+    )
     .delete(userController.deleteSingleUser);
 
 // router.stack.forEach((layer) => {

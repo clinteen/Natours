@@ -7,6 +7,12 @@ const router = express.Router({ mergeParams: true });
 
 router.use(authController.protect_routes);
 
+router.post(
+    '/admin/',
+    authController.restrictTo('admin'),
+    reviewController.createReview
+);
+
 router
     .route('/')
     .get(reviewController.getAllReviews)
