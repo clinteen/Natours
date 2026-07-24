@@ -16,6 +16,8 @@ const review_Btn = document.getElementById('review_btn');
 const review_Form = document.querySelector('.review_Form');
 const review_Form_btn = document.querySelector('.submit_review');
 const review_stars = document.querySelectorAll('.stars');
+const drop_down = document.querySelector('.drop_down');
+const body = document.querySelector('body');
 
 let star;
 // console.log(select_field.value);
@@ -62,6 +64,7 @@ const postReview = async (tourId, data) => {
             }, 2000);
         }
     } catch (err) {
+        // showAlert('error', err.response.data);
         console.log(err.response.data);
     }
 };
@@ -81,7 +84,9 @@ if (review_Btn) {
     review_Btn.addEventListener('click', (e) => {
         e.preventDefault();
 
+        drop_down.style.display = 'block';
         review_Form.style.display = 'flex';
+        body.style.overflow = 'hidden';
     });
 }
 
@@ -113,6 +118,20 @@ if (review_Form_btn) {
         const review = document.querySelector('#review').value;
         const rating = star;
 
+        drop_down.style.display = 'none';
+        review_Form.style.display = 'flex';
+        body.style.overflow = 'hidden';
+
+        body.removeAttribute('style');
+
         postReview(tourId, { review, rating });
+    });
+}
+
+if (drop_down) {
+    drop_down.addEventListener('click', () => {
+        drop_down.style.display = 'none';
+        review_Form.style.display = 'none';
+        body.removeAttribute('style');
     });
 }

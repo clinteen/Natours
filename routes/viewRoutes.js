@@ -6,19 +6,17 @@ const bookingsController = require('../controllers/bookingsController');
 
 const router = express.Router();
 
-// router.get("/", (req, res) => {
-//     res.status(200).render("base", {
-//         title: "Go on Adventurous Tours in the Country",
-//         tour: "The Forest Hiker",
-//         user: "Jonas",
-//     });
-// });
-
 router.get(
     '/',
     bookingsController.createBookingAuto,
     authController.isUserLoggedIn,
     viewController.getOverview
+);
+
+router.get(
+    '/my-favourites',
+    authController.protect_routes,
+    viewController.getFavouritesPage
 );
 
 router.get('/tour', authController.isUserLoggedIn, viewController.getTour);
@@ -34,6 +32,8 @@ router.get(
     authController.isUserLoggedIn,
     viewController.getLoginPage
 );
+
+router.get('/tour-guides', viewController.getGuides);
 
 router.get('/sign-up', viewController.getSignUpPage);
 

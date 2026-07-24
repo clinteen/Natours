@@ -5,8 +5,6 @@ const authController = require('./../controllers/authController');
 const bookingRouter = require('./bookingsRoutes');
 
 const router = express.Router();
-// console.log('userRoutes.js loaded from:', __filename);
-
 router.use('/:userId/bookings', bookingRouter);
 
 router.post('/signup', authController.userSignUp);
@@ -17,6 +15,8 @@ router.post('/forgot-password', authController.forgotPassword);
 router.patch('/reset-password/:token', authController.resetPassword);
 
 router.use(authController.protect_routes);
+
+router.post('/add-favourites/:tourId', userController.addFavourites);
 
 router.patch('/update-password', authController.updatePassword);
 
@@ -52,13 +52,5 @@ router
         userController.updateSingleUser
     )
     .delete(userController.deleteSingleUser);
-
-// router.stack.forEach((layer) => {
-//     if (layer.route) {
-//         console.log(Object.keys(layer.route.methods), layer.route.path);
-//     } else if (layer.name) {
-//         console.log('MIDDLEWARE:', layer.name);
-//     }
-// });
 
 module.exports = router;

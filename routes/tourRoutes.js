@@ -53,6 +53,7 @@ router
         authController.restrictTo('admin', 'lead-guide'),
         tourController.resizeUploadImage,
         tourController.updateTourImage,
+        tourController.changeFormToJSON,
         tourController.updateSingleTour
     )
     .delete(
@@ -60,13 +61,5 @@ router
         authController.restrictTo('admin', 'lead-guide'),
         tourController.deleteTour
     );
-
-// router
-//     .route("/:tourId/reviews")
-//     .post(
-//         authController.protect_routes,
-//         authController.restrictTo("user"),
-//         reviewController.createReview
-//     );
 
 module.exports = router;

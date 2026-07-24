@@ -49,7 +49,6 @@ exports.getTourBySlug = catchAsync(async (req, res, next) => {
         path: 'reviews',
         fields: 'rating review user'
     });
-    // console.log(req.user.id);
 
     if (!tour) {
         return next(new AppError('There is no tour with this Name!', 404));
@@ -70,6 +69,15 @@ exports.getTourBySlug = catchAsync(async (req, res, next) => {
     if (hasUserBookedTour) {
         console.log(hasUserBookedTour);
         res.locals.bookedTour = true;
+    }
+
+    const hasUserDroppedReview = await Review.findOne({
+        tour: tour._id,
+        user: req.user._id
+    });
+
+    if (hasUserDroppedReview) {
+        res.locals.reviewed = true;
     }
 
     res.status(200).render('tour', {
@@ -157,11 +165,13 @@ exports.createNewTour = catchAsync(async (req, res, next) => {
 
 exports.updateTour = catchAsync(async (req, res, next) => {
     const tourGuides = await Tour.findById(req.params.id);
+    const tourGuides_guides = await User.find();
     console.log(tourGuides);
 
     res.status(200).render('tours_admin_create', {
         title: 'Update Tour',
-        tourGuides
+        tourGuides,
+        tourGuides_guides
     });
 });
 
@@ -207,7 +217,6 @@ exports.createNewReview = catchAsync(async (req, res, next) => {
 exports.updateReview = catchAsync(async (req, res, next) => {
     const userId = req.params.id;
     const review = await Review.findById(userId);
-    // console.log(review);
 
     res.status(200).render('reviews_admin_create', {
         title: 'Update Review',
@@ -239,5 +248,27 @@ exports.updateBooking = catchAsync(async (req, res, next) => {
     res.status(200).render('bookings_admin_create', {
         title: 'Update Booking',
         bookingBeingUpdated
+    });
+});
+
+exports.getGuides = catchAsync(async (req, res, next) => {
+    const tourGuides = await User.find({
+        role: { $in: ['guide', 'lead-guide'] }
+    });
+
+    res.status(200).json({
+        tourGuides
+    });
+});
+
+exports.getFavouritesPage = catchAsync(async (req, res, next) => {
+    const user = req.user;
+    const tours = await Tour.find({ _id: { $in: user.favorites } }).populate(
+        'guides'
+    );
+
+    res.status(200).render('overview', {
+        title: 'My Favourites',
+        tours
     });
 });

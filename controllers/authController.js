@@ -100,8 +100,6 @@ exports.protect_routes = catchAsync(async (req, res, next) => {
         req.headers.authorization.startsWith('Bearer')
     ) {
         token = req.headers.authorization.split(' ')[1];
-        // console.log(token);
-        // return next();
     } else if (req.cookies.jwt) {
         token = req.cookies.jwt;
     }
@@ -140,8 +138,6 @@ exports.protect_routes = catchAsync(async (req, res, next) => {
             )
         );
     }
-    // console.log(currentUser);
-    // console.log(decoded);
 
     // Grant User access to Protected Routes
     req.user = currentUser;
@@ -220,7 +216,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     const resetToken = user.createPasswordToken();
     await user.save({ validateBeforeSave: false });
-    // console.log(resetToken);
 
     //3.) Send the token to the user email
 
@@ -228,12 +223,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     try {
         const URL = `${req.protocol}://${req.get('host')}/api/v1/users/reset-password/${resetToken}`;
-
-        // await sendEmail({
-        //     email: req.body.email,
-        //     subject: 'Your password reset token (valid for 10 minutes)',
-        //     message: message
-        // });
 
         await new Email(user, URL).sendPasswordReset();
 
@@ -286,12 +275,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     await user.save();
 
     sendToken(user, 200, res);
-    // const token = signJWT(user._id);
-    // console.log(new Date(jwt.verify(token, process.env.JWT_SECRET).iat * 1000));
-    // res.status(200).json({
-    //     status: "success",
-    //     token: token,
-    // });
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -319,9 +302,4 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     //4.) Log the user in and send a new JWT
 
     sendToken(user, 200, res);
-    // const token = signJWT(user._id);
-    // res.status(200).json({
-    //     status: "success",
-    //     token: token,
-    // });
 });

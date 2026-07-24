@@ -2,29 +2,176 @@ import { showAlert } from './alert.js';
 
 const date_btn = document.querySelector('#add-date');
 const location_btn = document.querySelector('#add-location');
+const start_location_btn = document.querySelector('#add-start-location');
 const date_form = document.querySelector('.dates');
 const location_form = document.querySelector('.locations');
-const start_location_container = document.querySelector('.locations_div');
+const start_location_form = document.querySelector('.start_location');
+const locations_div = document.querySelector('.locations_div');
+const start_location_div = document.querySelector('.start_location_div');
+const dates_div = document.querySelector('.dates_div');
+// let guides_divs = document.querySelectorAll('.guide_container');
+const guides_btns = document.querySelectorAll('.add_guides');
+// const guides_fields_1 = document.querySelector('#guides_field_1');
+// const guides_fields_2 = document.querySelector('#guides_field_2');
 const tour_form = document.querySelector('#create_tour_form');
 const user_form = document.querySelector('#create_user_form');
 const review_form = document.querySelector('#create_review_form');
 const booking_form = document.querySelector('#create_booking_form');
+const like_btns = document.querySelectorAll('.like_btn');
+const containers = document.querySelectorAll('.container_all');
+const back_drops = document.querySelector('.back_drops');
+const x = document.querySelectorAll('.x');
+const body = document.querySelector('body');
+const edit_review = document.querySelector('.user_update_review_btn');
+const delete_review = document.querySelector('.user_del_review_btn');
+const edit_review_form = document.querySelector('.edit_review_Form');
+const edit_review_dropdown = document.querySelector('.drop_down_edit_review');
+const submit_edit_review = document.querySelector('#edit_review');
+const review_stars = document.querySelectorAll('.stars');
+const hamburger_open = document.querySelector('.hamburger_menu');
+const hamburger_closed = document.querySelector('.x_menu');
+const side_menu = document.querySelector('.side_menu');
 
 const delete_resource_btn = document.querySelectorAll('.delete_resource');
 
-// let guides = [
-//     document.getElementById('guides').value,
-//     document.getElementById('lead-guides').value
-// ];
+const res = await fetch('/tour-guides');
+const tourGuides = await res.json();
+
+let star;
+let guides = [];
+let date_container = [];
+let location_container = [];
+let startLocation_div = {};
+
 let startLocation = {};
 let locations = [];
 let dates = [];
 let i = 1;
 
+if (hamburger_open) {
+    hamburger_open.addEventListener('click', (e) => {
+        side_menu.style.transform = 'translateX(0)';
+    });
+
+    hamburger_closed.addEventListener('click', (e) => {
+        side_menu.style.transform = 'translateX(100%)';
+    });
+}
+
+if (back_drops) {
+    back_drops.addEventListener('click', (e) => {
+        body.removeAttribute('style');
+        back_drops.style.display = 'none';
+
+        date_form.style.display = 'none';
+        date_form.reset();
+
+        location_form.style.display = 'none';
+        location_form.reset();
+
+        start_location_form.style.display = 'none';
+        start_location_form.reset();
+    });
+}
+
+x.forEach((el) => {
+    el.addEventListener('click', (e) => {
+        e.target.parentElement.remove();
+    });
+});
+
+const create_select_element = (role, element) => {
+    let select = document.createElement('select');
+    select.classList = 'form__input available';
+    select.setAttribute('name', role);
+
+    tourGuides.tourGuides.forEach((el) => {
+        const option = document.createElement('option');
+        option.setAttribute('value', el._id);
+        option.innerHTML = el.name;
+
+        if (el.role === role) select.appendChild(option);
+    });
+
+    select.addEventListener('change', (e) => {
+        const div = document.createElement('div');
+        const p = document.createElement('p');
+        const span = document.createElement('span');
+
+        div.className = 'guide_container';
+        p.setAttribute('data-guide-id', select.value);
+        p.innerHTML = select.options[select.selectedIndex].text;
+        span.innerHTML = 'x';
+        span.classList = 'x';
+
+        div.appendChild(p);
+        div.appendChild(span);
+
+        element.appendChild(div);
+        e.target.remove();
+    });
+
+    return select;
+};
+
+if (like_btns.length > 0) {
+    like_btns.forEach((el) => {
+        el.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            const tourId = e.target.dataset.tourId;
+
+            try {
+                const response = await axios({
+                    method: 'POST',
+                    url: `/api/v1/users/add-favourites/${tourId}`,
+                    favorites: tourId
+                });
+            } catch (err) {
+                console.log(err.response.data);
+            }
+        });
+    });
+}
+
+if (guides_btns.length > 0) {
+    guides_btns[0].addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const available = document.querySelector('.available');
+        if (available) {
+            return;
+        }
+
+        containers[3].appendChild(
+            create_select_element('guide', containers[3])
+        );
+
+        // console.log(create_select_element('guide'));
+
+        // console.log(tourGuides);
+    });
+
+    guides_btns[1].addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const available = document.querySelector('.available');
+        if (available) {
+            return;
+        }
+
+        containers[4].appendChild(
+            create_select_element('lead-guide', containers[4])
+        );
+    });
+}
+
 if (date_btn) {
     date_btn.addEventListener('click', (e) => {
         e.preventDefault();
 
+        body.style.overflow = 'hidden';
+        back_drops.style.display = 'block';
         date_form.style.display = 'block';
     });
 }
@@ -33,7 +180,19 @@ if (location_btn) {
     location_btn.addEventListener('click', (e) => {
         e.preventDefault();
 
+        body.style.overflow = 'hidden';
         location_form.style.display = 'block';
+        back_drops.style.display = 'block';
+    });
+}
+
+if (start_location_btn) {
+    start_location_btn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        body.style.overflow = 'hidden';
+        back_drops.style.display = 'block';
+        start_location_form.style.display = 'block';
     });
 }
 
@@ -52,8 +211,21 @@ if (date_form) {
         };
         dates.push(date_data);
 
+        body.removeAttribute('style');
+        back_drops.style.display = 'none';
+
         date_form.style.display = 'none';
         date_form.reset();
+
+        const new_date = `<div class='date_container container'>
+                            <h3 class='x'> x
+                            <h5> ${date_data.date} </h5>
+                            <h6> ${date_data.participants} </h6>
+                            <p> ${date_data.soldOut} </p> 
+                        </div>`;
+
+        // dates_div.insertAdjacentHTML('beforeend', new_date);
+        containers[0].insertAdjacentHTML('afterend', new_date);
 
         console.log(dates);
     });
@@ -70,7 +242,7 @@ if (location_form) {
         let loc_description = document.getElementById('description_loc').value;
         let address = document.getElementById('address').value;
         let type = document.getElementById('type').value;
-        let coordinates = [Number(cod_1), Number(cod_2)];
+        let coordinates = [Number(cod_2), Number(cod_1)];
 
         const location_data = {
             day,
@@ -82,15 +254,21 @@ if (location_form) {
 
         locations.push(location_data);
 
-        const new_location = `<div>
-                                <h1> Location ${i}</h2>
-                                <h2>${location_data.address}</h1>
-                                <h3>${location_data.coordinates}</h2>
-                                <span> X </span>
+        const new_location = `<div class='locations_container container' >
+                                <h3 class='x'> x </h3> 
+                                <h5> ${location_data.type} </h5>
+                                <h6> ${location_data.coordinates} </h6>
+                                <h5> ${location_data.address} </h5>
+                                <h5> ${location_data.description}</h5>
+                                <h5> ${location_data.day} </h5>
                             </div>`;
 
-        start_location_container.insertAdjacentHTML('beforeend', new_location);
+        // locations_div.insertAdjacentHTML('afterbegin', new_location);
+        containers[2].insertAdjacentHTML('beforeend', new_location);
         i++;
+
+        body.removeAttribute('style');
+        back_drops.style.display = 'none';
 
         location_form.style.display = 'none';
         location_form.reset();
@@ -98,6 +276,116 @@ if (location_form) {
         console.log(locations);
     });
 }
+
+if (start_location_form) {
+    start_location_form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        let cod_1 = document.getElementById('start_loc_coordinates_1').value;
+        let cod_2 = document.getElementById('start_loc_coordinates_2').value;
+
+        let loc_description = document.getElementById(
+            'start_loc_description_loc'
+        ).value;
+        let address = document.getElementById('start_loc_address').value;
+        let type = document.getElementById('start_loc_type').value;
+        let coordinates = [Number(cod_2), Number(cod_1)];
+
+        startLocation = {
+            description: loc_description,
+            address,
+            type,
+            coordinates
+        };
+
+        const new_start_location = `<div class='container start_location_container'>
+                                        <h3 class='x'> x
+                                        <h5> ${startLocation.type} <h5>
+                                        <h6> ${startLocation.coordinates} </h6>
+                                        <h5> ${startLocation.address} </h5>
+                                        <h5> ${startLocation.description} </h5>
+                                    </div>`;
+
+        // start_location_div.innerHTML = '';
+        // start_location_div.insertAdjacentHTML('afterbegin', new_start_location);
+
+        containers[1].innerHTML = '';
+        containers[1].insertAdjacentHTML('beforeend', new_start_location);
+
+        body.removeAttribute('style');
+        back_drops.style.display = 'none';
+
+        start_location_form.style.display = 'none';
+        start_location_form.reset();
+    });
+}
+
+const tour_objects = (obj) => {
+    let guides_divs = Array.from(document.querySelectorAll('.guide_container'));
+    const date_divs = Array.from(document.querySelectorAll('.date_container'));
+    const location_divs = Array.from(
+        document.querySelectorAll('.locations_container')
+    );
+    const start_location_container = document.querySelector(
+        '.start_location_container'
+    );
+
+    date_divs.forEach((el) => {
+        const date = new Date(el.children[1].innerHTML).toISOString();
+        const participants = Number(el.children[2].innerHTML);
+        const soldOut = el.children[3].innerHTML.trim();
+
+        const date_data = {
+            date,
+            participants,
+            soldOut
+        };
+        date_container.push(date_data);
+        console.log(date_container);
+    });
+
+    location_divs.forEach((el) => {
+        const coord_arr = el.children[2].innerHTML.split(',');
+
+        const type = el.children[1].innerHTML;
+        const coordinates = [Number(coord_arr[1]), Number(coord_arr[2])];
+        const address = el.children[3].innerHTML;
+        const description = el.children[4].innerHTML;
+        const day = el.children[5].innerHTML;
+
+        const date_data = {
+            type,
+            coordinates,
+            address,
+            description,
+            day
+        };
+        location_container.push(date_data);
+    });
+
+    guides_divs.forEach((el) => {
+        const guides_id = el.children[0].dataset.guideId;
+
+        guides.push(guides_id);
+        // console.log(guides);
+    });
+
+    const start_cod = start_location_container.children[2].innerHTML.split(',');
+
+    startLocation_div = {
+        type: start_location_container.children[1].innerHTML,
+        coordinates: [Number(start_cod[0]), Number(start_cod[1])],
+        address: start_location_container.children[3].innerHTML,
+        description: start_location_container.children[4].innerHTML
+    };
+
+    console.log(date_container, location_container, guides);
+
+    obj.append('startDates', JSON.stringify(date_container));
+    obj.append('startLocation', JSON.stringify(startLocation_div));
+    obj.append('locations', JSON.stringify(location_container));
+    obj.append('guides', JSON.stringify(guides));
+};
 
 const create_Tour = async (data) => {
     try {
@@ -183,7 +471,7 @@ const update_Resource = async (id, resource, method, data, message) => {
             data
         });
 
-        if (response.status === 'success') {
+        if (response.data.status === 'success') {
             showAlert(
                 'success',
                 `${resource.toUpperCase()} ${message} successfully!`
@@ -196,6 +484,43 @@ const update_Resource = async (id, resource, method, data, message) => {
         console.log(err.response.data);
     }
 };
+
+if (edit_review_dropdown) {
+    edit_review_dropdown.addEventListener('click', (e) => {
+        edit_review_dropdown.style.display = 'none';
+        edit_review_form.style.display = 'none';
+        body.removeAttribute('style');
+    });
+}
+
+if (edit_review) {
+    edit_review.addEventListener('click', () => {
+        edit_review_dropdown.style.display = 'block';
+        edit_review_form.style.display = 'flex';
+        body.style.overflow = 'hidden';
+    });
+
+    review_stars.forEach((item) => {
+        item.addEventListener('click', (e) => {
+            const id = e.currentTarget.getAttribute('id');
+            star = id;
+        });
+    });
+
+    submit_edit_review.addEventListener('click', (e) => {
+        e.preventDefault();
+        const review_id = edit_review.dataset.reviewId;
+        const review = document.querySelector('textarea').value;
+        const rating = star;
+        const data = { rating, review };
+
+        update_Resource(review_id, 'reviews', 'PATCH', data, 'updated');
+
+        edit_review_dropdown.style.display = 'none';
+        edit_review_form.style.display = 'none';
+        body.removeAttribute('style');
+    });
+}
 
 if (tour_form) {
     tour_form.addEventListener('submit', (e) => {
@@ -221,13 +546,7 @@ if (tour_form) {
             document.getElementById('description').value
         );
         // FRONTEND
-        if (dates.length > 0) {
-            form.append('startDates', JSON.stringify(dates));
-        }
-        // form.append('startDates', JSON.stringify(dates));
-        form.append('startLocation', JSON.stringify(startLocation));
-        form.append('locations', JSON.stringify(locations));
-        form.append('guides', JSON.stringify(guides));
+
         form.append('SecretTour', document.getElementById('secret_tour').value);
         // form.append('imageCover', document.getElementById('image_cover').files);
         // form.append('images', document.getElementById('images').files);
@@ -243,7 +562,30 @@ if (tour_form) {
             form.append('images', imagesInput.files[i]);
         }
 
-        create_Tour(form);
+        const route_action =
+            document.querySelector('#tours_btn').dataset.action;
+        const tour_id = document.querySelector('#tours_btn').dataset.tourId;
+
+        if (route_action === 'create') {
+            if (dates.length > 0) {
+                form.append('startDates', JSON.stringify(dates));
+            }
+            // form.append('startDates', JSON.stringify(dates));
+            form.append('startLocation', JSON.stringify(startLocation));
+            form.append('locations', JSON.stringify(locations));
+
+            const guide = document.getElementById('guides').value;
+            const lead_guide = document.getElementById('lead-guides').value;
+            guides.push(guide);
+            guides.push(lead_guide);
+            form.append('guides', JSON.stringify(guides));
+
+            create_Tour(form);
+        } else if (route_action === 'update') {
+            tour_objects(form);
+
+            update_Resource(tour_id, 'tours', 'PATCH', form, 'updated');
+        }
     });
 }
 

@@ -6,15 +6,6 @@ const AppError = require('./../utils/AppError');
 const factoryController = require('./factoryController');
 const tourController = require('./tourController');
 
-// const multerStorage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, 'public/img/users');
-//     },
-//     filename: (req, file, cb) => {
-//         const file_extension = file.mimetype.split('/')[1];
-//         cb(null, `user-${req.user.id}-${Date.now()}.${file_extension}`);
-//     }
-// });
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
@@ -70,8 +61,6 @@ const filteredObj = (obj, ...allowedFields) => {
 };
 
 exports.updateMe = asyncCatch(async (req, res, next) => {
-    // console.log(req.file);
-    // console.log(req.body);
     //1.) Make sure the user does not try to update password
     if (req.body.password || req.body.confirmPassword) {
         return next(
@@ -123,34 +112,10 @@ exports.deleteMe = asyncCatch(async (req, res, next) => {
 });
 
 exports.getAllUsers = factoryController.getAllDocuments(User);
-// exports.getAllUsers = asyncCatch(async (req, res, next) => {
-//     const users = await User.find();
-
-//     res.status(200).json({
-//         status: "success",
-//         requestTime: req.requestTime,
-//         length: users.length,
-//         data: {
-//             users: users,
-//         },
-//     });
-// });
 
 exports.getSingleUser = factoryController.getDocument(User);
-// exports.getSingleUser = (req, res) => {
-//     res.status(504).json({
-//         status: "success",
-//         message: "This page is not ready yet",
-//     });
-// };
 
 exports.updateSingleUser = factoryController.updateDocument(User);
-// exports.updateSingleUser = (req, res) => {
-//     res.status(504).json({
-//         status: "success",
-//         message: "This page is not ready yet",
-//     });
-// };
 
 exports.parseTourBody = (req, res, next) => {
     tourController.parseTourBody(
@@ -165,18 +130,27 @@ exports.parseTourBody = (req, res, next) => {
 };
 
 exports.createUser = factoryController.createDocument(User);
-// exports.createUser = (req, res) => {
-//     res.status(504).json({
-//         status: 'success',
-//         message: 'This page does not exist! Please use /sign-up page'
-//     });
-// };
-// exports.createUser = factoryController.createDocument(User);
 
 exports.deleteSingleUser = factoryController.deleteDocument(User);
-// exports.deleteSingleUser = (req, res) => {
-//     res.status(504).json({
-//         status: "success",
-//         message: "This page is not ready yet",
-//     });
-// };
+
+exports.addFavourites = asyncCatch(async (req, res, next) => {
+    const tourId = req.params.tourId;
+    const user = req.user;
+
+    const favorites = user.favorites.map((id) => id.toString());
+
+    if (favorites.includes(tourId)) {
+        user.favorites.pull(tourId);
+    } else {
+        user.favorites.push(tourId);
+    }
+
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            favorites: user.favorites
+        }
+    });
+});

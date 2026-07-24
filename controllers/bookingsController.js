@@ -76,6 +76,9 @@ exports.createBookingAuto = catchAsync(async (req, res, next) => {
         startDate: selectedDate.date
     });
 
+    selectedDate.participants = selectedDate.participants + 1;
+    await tour.save({ validateBeforeSave: false });
+
     res.redirect('/');
 });
 
@@ -87,6 +90,28 @@ exports.getSingleBooking = factoryController.getDocument(Booking, {
 });
 
 exports.updateBooking = factoryController.updateDocument(Booking);
+
+exports.addTourParticipants = catchAsync(async (req, res, next) => {
+    const tourId = await Tour.findById(req.body.tour);
+
+    const selectedDate = tourId.startDates.find(
+        (el) =>
+            el.date.toISOString().split('T')[0] ===
+            new Date(req.body.startDate).toISOString().split('T')[0]
+    );
+    if (!selectedDate)
+        return next(new AppError('This tour does not have this date', 404));
+
+    selectedDate.participants += 1;
+
+    if (selectedDate.participants >= tourId.maxGroupSize) {
+        selectedDate.soldOut = true;
+    }
+
+    await tourId.save({ validateBeforeSave: false });
+
+    next();
+});
 
 exports.createBooking = factoryController.createDocument(Booking);
 

@@ -33,17 +33,20 @@ mixin reviewCard(review)
             //- svg.reviews__star.reviews__star--active 
             //-     use(xlink:href='/img/icons.svg#icon-star')
 
-mixin hasUserBookedTour(secondary_text, cta_text, select_Tag)
+mixin hasUserBookedTour(secondary_text, duration, cta_text, select_Tag)
     .cta__img.cta__img--logo 
         img(src='/img/logo/white.png', alt='Natours Logo')
         img.cta__img.cta__img--1(src='/img/tour-5-2.jpg', alt='')
         img.cta__img.cta__img--2(src='/img/tour-5-2.jpg', alt='')
     .cta__content 
         h2.heading-secondary #{secondary_text}
-        p.cta__text #{tour.duration} #{cta_text} 
+        p.cta__text #{duration} #{cta_text} 
 
         if user
-            if bookedTour 
+            if reviewed 
+                a(href='/') 
+                    button.btn.btn--green Try out other tours
+            else if bookedTour 
                 button#review_btn.btn.btn--green.span-all-rows(data-tour-id=`${tour.id}`) Drop a Review 
             else 
                 .date_div
@@ -56,11 +59,10 @@ mixin hasUserBookedTour(secondary_text, cta_text, select_Tag)
         else 
             a.btn.btn--green.span-all-rows(href='/login') Log In to Book your Tour!
 
-mixin star_Review(id)
-    svg.reviews__star(id=`${id}`, class=`reviews__star--inactive stars`) 
-        use(xlink:href='/img/icons.svg#icon-star')
 
 block content 
+
+    include mixin
 
     .drop_down
 
@@ -104,26 +106,6 @@ block content
                     +overviewBox('Difficulty', tour.difficulty, 'trending-up')
                     +overviewBox('Participants', tour.maxGroupSize, 'users')
                     +overviewBox('Rating', `${tour.ratingsAverage} / 5`, 'star')
-                    //- .overview-box__detail 
-                    //-     svg.overview-box__icon 
-                    //-         use(xlink:href='/img/icons.svg#icon-calendar')
-                    //-     span.overview-box__label Next date 
-                    //-     span.overview-box__text August 2021
-                    //- .overview-box__detail 
-                    //-     svg.overview-box__icon 
-                    //-         use(xlink:href='/img/icons.svg#icon-trending-up')
-                    //-     span.overview-box__label Difficulty 
-                    //-     span.overview-box__text Medium 
-                    //- .overview-box__detail 
-                    //-     svg.overview-box__icon 
-                    //-         use(xlink:href='/img/icons.svg#icon-user')
-                    //-     span.overview-box__label Participants 
-                    //-     span.overview-box__text 10 People 
-                    //- .overview-box__detail 
-                    //-     svg.overview-box__icon
-                    //-         use(xlink:href='/img/icons.svg#icon-star')
-                    //-     span.overview-box__label Rating 
-                    //-     span.overview-box__text 4.9 / 5
 
                 .overview-box__group 
                     h2.heading-secondary.na-bt-lg Your tour guides 
@@ -135,14 +117,6 @@ block content
                             -if(guide.role === 'guide')
                                 span.overview-box__label Tour Guide    
                             span.overview-box__text= guide.name 
-                    //- .overview-box__detail 
-                    //-     img.overview-box__img(src='/img/users/user-18.jpg', alt='Tour Guide')
-                    //-     span.overview-box__label Tour Guide 
-                    //-     span.overview-box__text Lisa Brown 
-                    //- .overview-box__detail 
-                    //-     img.overview-box__img(sr='/img/users/user-17.jpg', alt='Intern')
-                    //-     span.overview-box__label Intern 
-                    //-     span.overview-box__text Max Smith 
 
         .description-box
             h2.heading-secondary.na-bt-lg About the #{tour.name} tour 
@@ -155,8 +129,6 @@ block content
         each image, index in tour.images
             .picture-box 
                 img.picture-box__img(src=`/img/tours/${image}`, alt=`The ${tour.name} Tour ${index + 1}`, class=`picture-box__img--${index + 1}`)
-                //- img.picture-box__img.picture-box__img--1(src='/img/tour-4-1.jpg', alt='The Park Camper Tour 1')
-                //- img.picture-box__img.picture-box__img--1(src='/img/tour-4-1.jpg', alt='The Park Camper Tour 1')
 
     section.section-map 
         #map(data-locations=JSON.stringify(tour.locations))
@@ -165,44 +137,15 @@ block content
         .reviews 
             each review in tour.reviews 
                 +reviewCard(review)
-            //- .reviews__card 
-            //-     .reviews__avatar 
-            //-         img.reviews__avatar-img(src='/img/users/user-7.jpg', alt='Jim Brown')
-            //-         h6.reviews__user Jim Brown 
-            //-     p.reviews__text Summary 
-            //-     .reviews__rating 
-            //-         svg.reviews__star.reviews__star--active 
-            //-             use(xlink:href='/img/icons.svg#icon-star')
-            //-         svg.reviews__star.reviews__star--active 
-            //-             use(xlink:href='/img/icons.svg#icon-star')
-            //-         svg.reviews__star.reviews__star--active 
-            //-             use(xlink:href='/img/icons.svg#icon-star')
-            //-         svg.reviews__star.reviews__star--active 
-            //-             use(xlink:href='/img/icons.svg#icon-star')
-            //-         svg.reviews__star.reviews__star--active 
-            //-             use(xlink:href='/img/icons.svg#icon-star')
 
     section.section-cta 
         .cta
-            if bookedTour
-                +hasUserBookedTour("Did You enjoy the Tour?", "Please drop a review for others to try it out")
+            if reviewed
+                +hasUserBookedTour('Thank you for your your service!!!')
+            else if bookedTour
+                +hasUserBookedTour("Did You enjoy the Tour?", `${tour.duration}`, "Please drop a review for others to try it out")
             else 
-                +hasUserBookedTour('What are you waiting for?', `days. 1 adventure. Infinite memories. Make it yours today!`)
-            //- .cta__img.cta__img--logo 
-            //-     img(src='/img/logo/white.png', alt='Natours Logo')
-            //-     img.cta__img.cta__img--1(src='/img/tour-5-2.jpg', alt='')
-            //-     img.cta__img.cta__img--2(src='/img/tour-5-2.jpg', alt='')
-            //- .cta__content 
-            //-     h2.heading-secondary What are you waiting for?
-            //-     p.cta__text #{tour.duration} days. 1 adventure. Infinite memories. Make it yours today! 
+                +hasUserBookedTour('What are you waiting for?',`${tour.duration}`, `days. 1 adventure. Infinite memories. Make it yours today!`)
 
-            //-     select(name='StartDateId')
-            //-         each date in tour.startDates
-            //-             option(value=`${date._id}`)= date.date.toLocaleString('en-us', {month: 'long', year: 'numeric'})
-
-            //-     if user
-            //-         button#book_btn.btn.btn--green.span-all-rows(data-tour-id=`${tour.id}`) Book Tour Now!
-            //-     else 
-            //-         a.btn.btn--green.span-all-rows(href='/login') Log In to Book your Tour!
 
     

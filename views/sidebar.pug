@@ -10,12 +10,12 @@ mixin navItem(text, link, icon, active)
 block content 
     main.main 
         .user-view 
-            nav.user-view__menu 
+            nav.user-view__menu.menu 
                 ul.side-nav 
                     +navItem('Settings', '/me', 'settings', true)
                     +navItem('My Bookings', '/my-tours', 'briefcase', false)
                     +navItem('My Reviews', '/my-reviews', 'star', false)
-                    +navItem('My Favourites', '#', 'credit-card', false)
+                    +navItem('My Favourites', '/my-favourites', 'credit-card', false)
 
                 - if(user.role === 'admin')
                     .admin-nav 

@@ -42,7 +42,7 @@ const sendDevError = (err, req, res, next) => {
     // B.) RENDERED WEBSITE
     // Send Generic Error
     console.error('ERROR: ', err.message);
-    // console.log(err);
+
     return res.status(err.statusCode).render('error', {
         title: 'Something Went Wrong',
         msg: err.message
@@ -51,10 +51,6 @@ const sendDevError = (err, req, res, next) => {
 
 //PRODUCTION
 const sendProdError = (err, req, res, next) => {
-    // console.log('err.isOperational:', err.isOperational);
-    // console.log('err instanceof AppError:', err instanceof AppError);
-    // console.log('err.constructor.name:', err.constructor.name);
-
     // A.) API
     if (req.originalUrl.startsWith('/api')) {
         // 1.) Operational Error: Send message to Client
@@ -103,8 +99,6 @@ module.exports = (err, req, res, next) => {
         sendDevError(err, req, res, next);
     } else if (process.env.NODE_ENV === 'production') {
         let my_error = err;
-        // my_error.message = err.message;
-        // console.log(my_error.isOperational);
 
         if (my_error.name === 'CastError') my_error = handleCastError(my_error);
         if (my_error.code === 11000) my_error = handleDuplicateFields(my_error);
@@ -115,7 +109,5 @@ module.exports = (err, req, res, next) => {
             my_error = handleJWTexpiresError();
 
         sendProdError(my_error, req, res, next);
-        // console.log(err.message);
-        // console.log(my_error.message);
     }
 };

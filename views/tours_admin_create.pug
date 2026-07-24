@@ -31,43 +31,81 @@ block content
                     textarea#description.form__input(type='text')= `${tourGuides ? tourGuides.description : ''}`
                 .form__group
                     .dates_div 
-                        label.form__label(for='startDates') StartDates:  
-                        //- input#startDates.form__input(type='date')
-                        button#add-date Add Dates
+                        label.form__label(for='startDates') StartDates: 
+                            .container_all
+                                if tourGuides
+                                    each date in tourGuides.startDates
+                                        .container.date_container 
+                                            h3.x x
+                                            h5 #{date.date.toLocaleDateString('en-us', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})}
+                                            h6 #{date.participants}
+                                            p #{date.soldOut} 
+                            //- input#startDates.form__input(type='date')
+                        button.add_btns#add-date Add Dates
+                .form__group 
+                    .start_location_div
+                        label.form__label(for='start_location') Start Location: 
+                            .container_all 
+                                if tourGuides
+                                    .container.start_location_container 
+                                        h3.x x
+                                        h5 #{tourGuides.startLocation.type}
+                                        h6 #{tourGuides.startLocation.coordinates}
+                                        h5 #{tourGuides.startLocation.address}
+                                        h5 #{tourGuides.startLocation.description} 
+                       
+                        button.add_btns#add-start-location Add Location
                 .form__group 
                     .locations_div
-                        label.form__label(for='start_location') Start Location:  
-                        //- input#start_location.form__input(type='date', name='startLocation')
-                        button#add-location Add Location
+                        label.form__label(for='locations') Locations: 
+                            .container_all 
+                                if tourGuides
+                                        each location in tourGuides.locations
+                                            .container.locations_container 
+                                                h3.x x
+                                                h5 #{location.type}
+                                                h6 #{location.coordinates}
+                                                h5 #{location.address} 
+                                                h5 #{location.description}
+                                                h5 #{location.day}
+                        
+                        button.add_btns#add-location Add Locations
                 .form__group 
-                    label.form__label(for='locations') Locations:  
-                    //- input#locations.form__input(type='number', name='locations')
-                    button#add-locations Add Locations
-                .form__group 
-                    label.form__label(for='guides') Guides:
-                    select#guides.form__input(name='guides')
-                        if tourGuides 
-                            each guide in tourGuides.guides
-                                if guide.role === 'guide' 
-                                    option(value=`${guide._id}`)= guide.name
-                        else
-                            option
-                            each guide in users 
-                                if guide.role === 'guide'
-                                    option(value=`${guide._id}`)= guide.name
-                                    //- input#guides.form__input(type='number', name='guides')
-                .form__group
-                        label.form__label(for='lead-guides') Lead Guides:
-                        select#lead-guides.form__input(name='guides')
+                    label#guides_field_1.form__label(for='guides') Guides:
+                        .container_all
                             if tourGuides
-                                each guide in tourGuides.guides
-                                    if guide.role === 'lead-guide' 
-                                        option(value=`${guide._id}`)= guide.name 
+                                each guide, index in tourGuides.guides
+                                    if guide.role === 'guide'
+                                        .guide_container 
+                                            p(data-guide-id=`${guide._id}`)= guide.name
+                                            span.x x
+                                
                             else
-                                option
-                                each guide in users 
-                                    if guide.role === 'lead-guide'
-                                        option(value=`${guide._id}`)= guide.name
+                                select#guides.form__input(name='guides')
+                                    option
+                                    each guide in users 
+                                        if guide.role === 'guide'
+                                            option(value=`${guide._id}`)= guide.name
+                                            
+                    button.add_btns.add_guides Add Guides
+                .form__group
+                        label#guides_field_2.form__label(for='lead-guides') Lead Guides:
+                            .container_all
+                                if tourGuides
+                                    each guide in tourGuides.guides
+                                        if guide.role === 'lead-guide'
+                                            .guide_container 
+                                                p(data-guide-id=`${guide._id}`)= guide.name
+                                                span.x x
+                                    
+                                else
+                                    select#lead-guides.form__input(name='guides')
+                                        option
+                                            each guide in users 
+                                                if guide.role === 'lead-guide'
+                                                    option(value=`${guide._id}`)= guide.name
+
+                        button.add_btns.add_guides Add Lead Guides
                 .form__group 
                     label.form__label(for='secret_tour') Secret Tour:  
                     input#secret_tour.form__input(type='boolean', name='secret_tour', value=`${tourGuides ? tourGuides.SecretTour : ''}`)
@@ -79,9 +117,11 @@ block content
                     input#images.form__input(type='file', name='images', multiple)
                     span Hold C'trl to select multiple files
                 .form__group 
-                    button#tour_btn.btn.btn--green(data-action=`${tourGuides ? 'update' : 'create'}`, data-tour-id=`${tourGuides ? tourGuides._id : ''}`) #{tourGuides ? 'Update Tour' : 'Create Tour'}
+                    button#tours_btn.btn.btn--green(data-action=`${tourGuides ? 'update' : 'create'}`, data-tour-id=`${tourGuides ? tourGuides._id : ''}`) #{tourGuides ? 'Update Tour' : 'Create Tour'}
 
     
+    .back_drops
+
     form.locations
         .form_group 
             label.form__label(for='type') Type 

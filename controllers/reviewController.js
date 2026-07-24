@@ -5,20 +5,6 @@ const factoryController = require('./factoryController');
 const AppError = require('../utils/AppError');
 
 exports.getAllReviews = factoryController.getAllDocuments(ReviewModel);
-// exports.getAllReviews = catchAsync(async (req, res, next) => {
-//     let filteredId = {};
-//     if (req.params.tourId) {
-//         filteredId = { tour: req.params.tourId };
-//     }
-
-//     const reviews = await ReviewModel.find(filteredId);
-
-//     res.status(200).json({
-//         status: "success",
-//         length: reviews.length,
-//         data: reviews,
-//     });
-// });
 
 exports.getUserTourId = catchAsync(async (req, res, next) => {
     if (!req.body.tour) req.body.tour = req.params.tourId;

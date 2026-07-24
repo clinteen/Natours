@@ -16,5 +16,21 @@ block sidebar-content
                         svg.reviews__star(class=`reviews__star--${i<= review.rating ? 'active' : 'inactive'}`)
                             use(xlink:href='/img/icons.svg#icon-star')
                 .card_footer_admin 
-                    a.admin_btn(href=`/review-update`) Update 
-                    a.admin_btn Delete 
+                    a.user_update_review_btn.admin_btn(data-review-id=`${review._id}`) Edit 
+                    a.user_del_review_btn.admin_btn(href=``) Delete 
+
+    include mixin
+
+    .drop_down_edit_review
+
+    section.edit_review_Form 
+        .star_container
+            +star_Review(1)
+            +star_Review(2)
+            +star_Review(3)
+            +star_Review(4)
+            +star_Review(5)
+        .review_container 
+            label(for='review') Review 
+            textarea(id='review') 
+        button#edit_review Edit Review

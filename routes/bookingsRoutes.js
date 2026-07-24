@@ -15,7 +15,11 @@ router.use(authController.restrictTo('admin', 'lead-guide'));
 router
     .route('/')
     .get(bookingsController.getAllBookings)
-    .post(reviewController.getUserTourId, bookingsController.createBooking);
+    .post(
+        reviewController.getUserTourId,
+        bookingsController.addTourParticipants,
+        bookingsController.createBooking
+    );
 
 router
     .route('/:id')
