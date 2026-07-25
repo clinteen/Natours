@@ -7,10 +7,14 @@ const dotenv = require('dotenv');
 
 dotenv.config({ path: './config.env' });
 
-mongoose.connect(process.env.DATABASE).then((con) => {
+mongoose.connect(process.env.CLOUD_DATABASE).then((con) => {
     // console.log(con.connections);
-    console.log('DB connected succesfully');
+    console.log('DB connected successfully');
 });
+// mongoose.connect(process.env.DATABASE).then((con) => {
+//     // console.log(con.connections);
+//     console.log('DB connected successfully');
+// });
 
 const tours = JSON.parse(
     fs.readFileSync(`${__dirname}/../tours.json`, 'utf-8')

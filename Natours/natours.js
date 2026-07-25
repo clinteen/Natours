@@ -108,13 +108,6 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
-// Test Middleware
-
-// app.use((req, res, next) => {
-//     console.log("Hello from the middleware 👋");
-//     next();
-// });
-
 app.use(hpp());
 
 // app.use(hpp({
@@ -136,9 +129,6 @@ app.use(express.static(`${__dirname}/../public`));
 
 app.use((req, res, next) => {
     req.requestTime = new Date().toISOString();
-    // console.log(x);
-    // console.log(req.headers);
-    // console.log(req.cookies);
     next();
 });
 
@@ -147,12 +137,6 @@ app.get('/testing', (req, res) => {
     res.render('test');
 });
 
-// app.get("/api/v1/tours", getAllTours);
-// app.get("/api/v1/tours/:id", getSingleTour);
-// app.post("/api/v1/tours", createTour);
-// app.patch("/api/v1/tours/:id", updateSingleTour);
-// app.delete("api/v1/tours/:id", deleteTour);
-
 app.use('/', viewsRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
@@ -160,17 +144,6 @@ app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingsRouter);
 
 app.all('/{*splat}', (req, res, next) => {
-    // res.status(404).json({
-    //     status: "Failed",
-    //     message: `Cannot find this url: ${req.originalUrl} on this server`,
-    // });
-
-    // const err = new Error(
-    //     `Cannot find this url: ${req.originalUrl} on this server`
-    // );
-    // err.statusCode = 404;
-    // err.status = "Failed";
-
     const err = new AppError(
         `Cannot find this url: ${req.originalUrl} on this server`,
         404
