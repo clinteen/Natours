@@ -17,7 +17,7 @@ const tour_form = document.querySelector('#create_tour_form');
 const user_form = document.querySelector('#create_user_form');
 const review_form = document.querySelector('#create_review_form');
 const booking_form = document.querySelector('#create_booking_form');
-const like_btns = document.querySelectorAll('.like_btn');
+const like_btns = document.querySelectorAll('.like_btn img');
 const containers = document.querySelectorAll('.container_all');
 const back_drops = document.querySelector('.back_drops');
 const x = document.querySelectorAll('.x');
@@ -31,6 +31,7 @@ const review_stars = document.querySelectorAll('.stars');
 const hamburger_open = document.querySelector('.hamburger_menu');
 const hamburger_closed = document.querySelector('.x_menu');
 const side_menu = document.querySelector('.side_menu');
+const side_menu_dropdown = document.querySelector('.side_menu_dropdown');
 
 const delete_resource_btn = document.querySelectorAll('.delete_resource');
 
@@ -51,10 +52,22 @@ let i = 1;
 if (hamburger_open) {
     hamburger_open.addEventListener('click', (e) => {
         side_menu.style.transform = 'translateX(0)';
+        side_menu_dropdown.style.display = 'block';
+        side_menu_dropdown.style.opacity = 1;
     });
 
     hamburger_closed.addEventListener('click', (e) => {
         side_menu.style.transform = 'translateX(100%)';
+        side_menu_dropdown.style.display = 'none';
+        side_menu_dropdown.style.opacity = 0;
+    });
+}
+
+if (side_menu_dropdown) {
+    side_menu_dropdown.addEventListener('click', (e) => {
+        side_menu.style.transform = 'translateX(100%)';
+        side_menu_dropdown.style.display = 'none';
+        side_menu_dropdown.style.opacity = 0;
     });
 }
 
@@ -118,6 +131,11 @@ if (like_btns.length > 0) {
     like_btns.forEach((el) => {
         el.addEventListener('click', async (e) => {
             e.preventDefault();
+
+            const liked = e.target.dataset.liked === 'true';
+
+            el.src = liked ? '/img/heart_1.png' : '/img/heart_2.png';
+            el.dataset.liked = `${!liked}`;
 
             const tourId = e.target.dataset.tourId;
 

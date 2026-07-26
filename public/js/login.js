@@ -1,7 +1,7 @@
 import { showAlert } from './alert.js';
 
 const form = document.querySelector('#form-login');
-const logOutBtn = document.querySelector('.nav__el--logout');
+const logOutBtns = document.querySelectorAll('.nav__el--logout');
 const updateForm = document.querySelector('.form-user-data');
 const passwordForm = document.querySelector('#password-form');
 
@@ -28,13 +28,14 @@ const login = async (email, password) => {
 };
 
 const logOut = async () => {
+    console.log('logout');
     try {
         const response = await axios({
             method: 'GET',
             url: '/api/v1/users/logout'
         });
 
-        if (response.data.status === 'success') location.reload(true);
+        if (response.data.status === 'success') location.assign('/');
     } catch (err) {
         showAlert('error', 'Error Logging Out! Please try again');
     }
@@ -74,8 +75,10 @@ if (form) {
     });
 }
 
-if (logOutBtn) {
-    logOutBtn.addEventListener('click', logOut);
+if (logOutBtns.length > 0) {
+    logOutBtns.forEach((el) => {
+        el.addEventListener('click', logOut);
+    });
 }
 
 if (updateForm) {

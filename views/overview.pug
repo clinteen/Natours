@@ -44,6 +44,15 @@ block content
                             span.card__footer-text rating (#{tour.ratingsQuantity})
                         a.btn.btn--green.btn--small(href=`/tours/${tour.slug}`) Details
 
-                        button(data-tour-id=`${tour._id}`).like_btn Like Tour
+                        - let liked_tour = 'false';
+                        if user 
+                            - const user_favorite = tour._id.toString(); 
+                            -const favorites = user.favorites.map(el => el.toString());
+                            if favorites.includes(user_favorite)
+                                - liked_tour = 'true';
+
+                        .like_btn 
+                            img(src=`${liked_tour == 'false' ? '/img/heart_1.png' : '/img/heart_2.png'}`, alt='like_btn', data-tour-id=`${tour._id}`, data-liked=`${liked_tour}`)
+                        //- button(data-tour-id=`${tour._id}`).like_btn Like Tour
 
                     

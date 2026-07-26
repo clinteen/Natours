@@ -5,34 +5,41 @@ mixin navItem(text, link, icon, active)
                 use(xlink:href=`/img/icons.svg#icon-${icon}`)
             | #{text}
 
+.side_menu_dropdown
+
 section.side_menu 
     main.main 
         nav.user-view__menu
             .x_menu 
                 span 
-                span 
-            ul.side-nav 
-                +navItem('Settings', '/me', 'settings', true)
-                +navItem('My Bookings', '/my-tours', 'briefcase', false)
-                +navItem('My Reviews', '/my-reviews', 'star', false)
-                +navItem('My Favourites', '/my-favourites', 'credit-card', false)
+                span
 
-            - if(user && user.role === 'admin')
-                .admin-nav 
-                    h5.admin-nav__heading Admin 
-                    ul.side-nav 
-                        +navItem('Manage Tours', '/admin/manage-tours', 'map', false)
-                        +navItem('Manage Users', '/admin/manage-users', 'users', false)
-                        +navItem('Manage Reviews', '/admin/manage-reviews', 'star', false)
-                        +navItem('Manage Bookings', '/admin/manage-bookings', 'briefcase', false)
-                nav.nav.nav--tours
-                    a.nav__el(href='/') All Tours 
-                nav.nav.nav--user 
-                    if user
-                        a.nav__el.nav__el--logout Log Out
-                        a.nav__el(href='/me')
-                            img.nav__user-img(src=`/img/users/${user.photo}` alt='User photo')
-                            span #{user.name.split(' ')[0]}
-                    else
-                        a.nav__el(href='/login') Log in 
-                        a.nav__el.nav__el--cta(href='/sign-up') Sign Up
+            nav.nav.nav--tours
+                a.nav__el(href='/') All Tours
+
+            nav.nav.nav--user 
+                if user
+                    a.nav__el.nav__el--logout Log Out
+                    a.nav__el(href='/me')
+                        img.nav__user-img(src=`/img/users/${user.photo}` alt='User photo')
+                        span #{user.name.split(' ')[0]}
+                else
+                    a.nav__el(href='/login') Log in 
+                    a.nav__el.nav__el--cta(href='/sign-up') Sign Up
+
+            if user 
+                ul.side-nav 
+                    +navItem('Settings', '/me', 'settings', true)
+                    +navItem('My Bookings', '/my-tours', 'briefcase', false)
+                    +navItem('My Reviews', '/my-reviews', 'star', false)
+                    +navItem('My Favourites', '/my-favourites', 'credit-card', false)
+
+                if user.role === 'admin'
+                    .admin-nav 
+                        h5.admin-nav__heading Admin 
+                        ul.side-nav 
+                            +navItem('Manage Tours', '/admin/manage-tours', 'map', false)
+                            +navItem('Manage Users', '/admin/manage-users', 'users', false)
+                            +navItem('Manage Reviews', '/admin/manage-reviews', 'star', false)
+                            +navItem('Manage Bookings', '/admin/manage-bookings', 'briefcase', false) 
+            
