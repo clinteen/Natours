@@ -77,10 +77,12 @@ const createBookingWebHook = async (session) => {
     const lineItems = fullSession.line_items.data;
     const price = lineItems[0].amount_total / 100;
 
-    console.log(fullSession);
+    // console.log(fullSession);
 
     const selectedDate = session.metadata.startDate;
     const selectedTour = Tour.findById(tour);
+    console.log(selectedDate);
+    console.log(selectedTour);
     const date = selectedTour.startDates.id(selectedDate);
 
     const startDate = date.date;
