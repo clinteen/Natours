@@ -6,6 +6,8 @@ const bookingsController = require('../controllers/bookingsController');
 
 const router = express.Router();
 
+router.use(viewController.alerts);
+
 router.get(
     '/',
     // bookingsController.createBookingAuto,

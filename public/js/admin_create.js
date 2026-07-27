@@ -49,6 +49,12 @@ let locations = [];
 let dates = [];
 let i = 1;
 
+const alertMessage = body.dataset.alert;
+
+if (alertMessage) {
+    showAlert('success', alertMessage, 20);
+}
+
 if (hamburger_open) {
     hamburger_open.addEventListener('click', (e) => {
         side_menu.style.transform = 'translateX(0)';

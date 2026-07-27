@@ -28,6 +28,17 @@ const manageResources = (Model, title, pug_file, populateOptions) => {
     });
 };
 
+exports.alerts = (req, res, next) => {
+    const { alert } = req.query;
+
+    if (alert === 'booking') {
+        res.locals.alert =
+            "Your booking was successful, Please check your email for confirmation. If your booking doesn't show up immediately Please come back later";
+    }
+
+    next();
+};
+
 exports.getOverview = catchAsync(async (req, res, next) => {
     const tours = await Tour.find();
 
