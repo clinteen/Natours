@@ -80,7 +80,7 @@ const createBookingWebHook = async (session) => {
     // console.log(fullSession);
 
     const selectedDate = session.metadata.startDate;
-    const selectedTour = Tour.findById(tour);
+    const selectedTour = await Tour.findById(tour);
     console.log(selectedDate);
     console.log(selectedTour);
     const date = selectedTour.startDates.id(selectedDate);
