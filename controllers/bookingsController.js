@@ -69,7 +69,7 @@ exports.bookingSession = catchAsync(async (req, res, next) => {
 const createBookingWebHook = async (session) => {
     const tour = session.client_reference_id;
     const user = User.findOne({ email: session.customer_email }).id;
-    const price = session.line_items[0].unit_amount / 100;
+    const price = session.line_items[0].price_data.unit_amount / 100;
 
     const selectedDate = session.metadata.startDate;
     const selectedTour = Tour.findById(tour);
