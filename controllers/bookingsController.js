@@ -72,7 +72,7 @@ const createBookingWebHook = async (session) => {
     });
 
     const tour = session.client_reference_id;
-    const user = await User.findOne({ email: session.customer_email }).id;
+    const user = await User.findOne({ email: session.customer_email })._id;
     console.log(user);
     // const price = session.line_items[0].price_data.unit_amount / 100;
     const lineItems = fullSession.line_items.data;
@@ -87,7 +87,7 @@ const createBookingWebHook = async (session) => {
     const date = selectedTour.startDates.id(selectedDate);
 
     const startDate = date.date;
-    console.log(startDate);
+    // console.log(startDate);
 
     if (!startDate) {
         console.log('NO date with this tour');
