@@ -15,13 +15,13 @@ console.log(process.env.NODE_ENV);
 
 const app = require('./Natours/natours');
 
-// mongoose.connect(process.env.CLOUD_DATABASE).then((con) => {
-//     console.log('DB connected successfully');
-// });
-mongoose.connect(process.env.DATABASE).then((con) => {
-    // console.log(con.connections);
+mongoose.connect(process.env.CLOUD_DATABASE).then((con) => {
     console.log('DB connected successfully');
 });
+// mongoose.connect(process.env.DATABASE).then((con) => {
+//     // console.log(con.connections);
+//     console.log('DB connected successfully');
+// });
 
 // Start server
 // const testTour = Tour({
