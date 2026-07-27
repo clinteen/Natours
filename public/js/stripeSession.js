@@ -71,6 +71,9 @@ const postReview = async (tourId, data) => {
 
 if (bookBtn) {
     bookBtn.addEventListener('click', async (e) => {
+        if (!select_field.value) {
+            return showAlert('error', 'Please select a tour Date');
+        }
         // console.log(option.value);
         e.target.textContent = 'processing...';
 

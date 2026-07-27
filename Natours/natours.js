@@ -15,6 +15,7 @@ const tourRouter = require('./../routes/tourRoutes');
 const userRouter = require('./../routes/userRoutes');
 const reviewRouter = require('./../routes/reviewRoutes');
 const bookingsRouter = require('./../routes/bookingsRoutes');
+const bookingController = require('./../controllers/bookingsController');
 const viewsRouter = require('../routes/viewRoutes');
 
 const app = express();
@@ -50,6 +51,9 @@ app.set('views', `${__dirname}/../views`);
 //         }
 //     })
 // );
+
+
+app.post('/webhook-checkout', express.raw({type: 'application/json'}), bookingController.webhookCheckOut)
 
 // Body parser and reading data from body to req.body
 
