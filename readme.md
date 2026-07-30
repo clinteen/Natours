@@ -1,5 +1,13 @@
-# Natours Application
+    # Natours API
 
-This website is not mine, It is the website used in my learning process. Courtesy of Jonas Schmedtmann.
+    A full-stack tours booking backend built with Node.js, Express, and MongoDB.
 
-Built using modern technologies: Node.js, express.js, MongoDB, Postman.
+    Features:
+    - JWT Authentication & Role-based access
+    - Stripe Checkout + Webhooks for payments
+    - RESTful API with filtering, sorting, pagination
+    - Error handling and security middleware
+    - Deployed on Render
+
+    Tech: Node.js, Express, MongoDB, Mongoose, Stripe, JWT
+    Live: https://your-app.onrender.com
